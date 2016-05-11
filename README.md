@@ -1,9 +1,10 @@
 #Slack-SQL
 ![screenshot](http://g.recordit.co/bpXw88G5hz.gif)
 
-## Install PostSQL using pip
+## Install PostGreSQL using pip
 
 The query execution is based on PostgreSQL's python library -- [PyGreSQL](http://www.pygresql.org/), it needs to be installed on the server first.
+
 1. On terminal, open bash
 ```
   $sudo bash
@@ -13,7 +14,7 @@ The query execution is based on PostgreSQL's python library -- [PyGreSQL](http:/
   $export CFLAGS=-Qunused-arguments
   $export CPPFLAGS=-Qunused-arguments
 ```
-3.
+3. Install
 ```
   $pip install PyGreSQL
 ```
