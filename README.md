@@ -28,9 +28,12 @@ The query execution is based on PostgreSQL's python library -- [PyGreSQL](http:/
 ```python
 db = DB(dbname='',host='',port= ,user='',passwd='')
 ```
-3. Deploy this to server(For example, [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy))
+3. Deploy this to server(For example, Heroku).
 4. Add this integration to your Slack. Specify your url in the Slack integration URL.
 5. All set!
+
+## Deploy to Heroku
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## Slack example command:
 - create table:
