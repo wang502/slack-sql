@@ -1,6 +1,6 @@
 ## Install PostSQL for python library
 
-The query execution is based on PostgreSQL's python library -- ![PyGreSQL](http://www.pygresql.org/), it needs to be installed on the server first.
+The query execution is based on PostgreSQL's python library -- [PyGreSQL](http://www.pygresql.org/), it needs to be installed on the server first.
 1. On terminal, open bash
 ```
   $sudo bash
