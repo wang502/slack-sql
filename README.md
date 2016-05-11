@@ -20,8 +20,11 @@ The query execution is based on PostgreSQL's python library -- [PyGreSQL](http:/
 ```
 
 ## Install PostgreSQL from source
-- go into PostgreSQL-5.0 folder, type ```python setup.py install```
-
+go into PostgreSQL-5.0 folder, type the folowing commands
+```
+python setup.py build
+python setup.py install
+```
 ## Set up:
 1. Clone this repo
 2. Config your database name, host, port, user name, and password in ```connection.py```
