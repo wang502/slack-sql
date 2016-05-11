@@ -1,0 +1,58 @@
+{%- extends "cloud/layout.html" %}
+
+{% set css_files = css_files + ["_static/pygresql.css"] %}
+
+{#
+    This layout adds a page header above the standard layout.
+    It also removes the relbars from all pages that are not part
+    of the core documentation in the contents/ directory,
+    adapting the navigation bar (breadcrumb) appropriately.
+#}
+
+{% set is_content = pagename.startswith(('contents/', 'genindex', 'modindex', 'py-', 'search')) %}
+{% if is_content %}
+{% set master_doc = 'contents/index' %}
+{% set parents = parents[1:] %}
+{% endif %}
+
+{% block header %}
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="{{ pathto('index') }}">Home</a></li>
+    <li><a href="{{ pathto('download/index') }}">Download</a></li>
+    <li><a href="{{ pathto('contents/index') }}">Documentation</a></li>
+    <li><a href="{{ pathto('community/index') }}">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="{{ pathto('index') }}">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+{% endblock %}
+
+{% block relbar1 -%}
+{%- if is_content -%}
+    {{ super() }}
+{% else %}
+<div class="relbar-top"><div class="related norelbar">
+<div class="subtitle">:: PostgreSQL module for Python ::</div>
+</div></div>
+{%- endif -%}
+{%- endblock %}
+
+{% block relbar2 -%}
+{%- if is_content -%}
+    {{ super() }}
+{%- else -%}
+<div class="relbar-bottom"><div class="related norelbar"></div></div>
+{%- endif -%}
+{%- endblock %}
+
+{% block content -%}
+{%- if is_content -%}
+{{ super() }}
+{%- else -%}
+<div class="norelbar">{{ super() }}</div>
+{%- endif -%}
+{%- endblock %}

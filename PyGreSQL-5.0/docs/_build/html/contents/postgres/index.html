@@ -1,0 +1,215 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>A PostgreSQL Primer &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="next" title="Basic examples" href="basic.html" />
+    <link rel="prev" title="Remarks on Adaptation and Typecasting" href="../pgdb/adaptation.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="basic.html" title="Basic examples"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="../pgdb/adaptation.html" title="Remarks on Adaptation and Typecasting"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+ 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="a-postgresql-primer">
+<h1>A PostgreSQL Primer<a class="headerlink" href="#a-postgresql-primer" title="Permalink to this headline">¶</a></h1>
+<p>The examples in this chapter of the documentation have been taken
+from the PostgreSQL manual. They demonstrate some PostgreSQL features
+using the classic PyGreSQL interface. They can serve as an introduction
+to PostgreSQL, but not so much as examples for the use of PyGreSQL.</p>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="basic.html">Basic examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#creating-a-connection-to-the-database">Creating a connection to the database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#creating-tables">Creating tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#insert-data">Insert data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#retrieving-data">Retrieving data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#retrieving-data-into-other-tables">Retrieving data into other tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#aggregates">Aggregates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#joining-tables">Joining tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#updating-data">Updating data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#deleting-data">Deleting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#removing-the-tables">Removing the tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Examples for advanced features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#inheritance">Inheritance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#arrays">Arrays</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="func.html">Examples for using SQL functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="func.html#creating-sql-functions-on-base-types">Creating SQL Functions on Base Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="func.html#creating-sql-functions-on-composite-types">Creating SQL Functions on Composite Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="func.html#creating-sql-functions-with-multiple-sql-statements">Creating SQL Functions with multiple SQL statements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="func.html#remove-functions-that-were-created-in-this-example">Remove functions that were created in this example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="syscat.html">Examples for using the system catalogs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="syscat.html#lists-indices">Lists indices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="syscat.html#list-user-defined-attributes">List user defined attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="syscat.html#list-user-defined-base-types">List user defined base types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="syscat.html#list-operators">List  operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="syscat.html#list-functions-of-a-language">List functions of a language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="syscat.html#list-aggregate-functions">List aggregate functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="syscat.html#list-operator-families">List operator families</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p><div class="sphinxlocaltoc">
+    <h3><a href="../../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">A PostgreSQL Primer</a><ul>
+<li><a class="reference internal" href="#contents">Contents</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="../pgdb/adaptation.html"
+                          title="Previous page">&larr; Remarks on Adaptation and Typecasting</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="basic.html"
+                          title="Next page">&rarr; Basic examples</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/postgres/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="basic.html" title="Basic examples"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="../pgdb/adaptation.html" title="Remarks on Adaptation and Typecasting"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+ 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

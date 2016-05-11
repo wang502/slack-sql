@@ -1,0 +1,1334 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Module functions and constants &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="up" title="pg — The Classic PyGreSQL Interface" href="index.html" />
+    <link rel="next" title="Connection – The connection object" href="connection.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="connection.html" title="Connection – The connection object"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U"><code class="docutils literal"><span class="pre">pg</span></code> &#8212; The Classic PyGreSQL Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-functions-and-constants">
+<h1>Module functions and constants<a class="headerlink" href="#module-functions-and-constants" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="index.html#module-pg" title="pg"><code class="xref py py-mod docutils literal"><span class="pre">pg</span></code></a> module defines a few functions that allow to connect
+to a database and to define &#8220;default variables&#8221; that override
+the environment variables used by PostgreSQL.</p>
+<p>These &#8220;default variables&#8221; were designed to allow you to handle general
+connection parameters without heavy code in your programs. You can prompt the
+user for a value, put it in the default variable, and forget it, without
+having to modify your environment. The support for default variables can be
+disabled by setting the <code class="docutils literal"><span class="pre">-DNO_DEF_VAR</span></code> option in the Python setup file.
+Methods relative to this are specified by the tag [DV].</p>
+<p>All variables are set to <code class="docutils literal"><span class="pre">None</span></code> at module initialization, specifying that
+standard environment variables should be used.</p>
+<div class="section" id="connect-open-a-postgresql-connection">
+<h2>connect &#8211; Open a PostgreSQL connection<a class="headerlink" href="#connect-open-a-postgresql-connection" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.connect">
+<code class="descclassname">pg.</code><code class="descname">connect</code><span class="sig-paren">(</span><span class="optional">[</span><em>dbname</em><span class="optional">]</span><span class="optional">[</span>, <em>host</em><span class="optional">]</span><span class="optional">[</span>, <em>port</em><span class="optional">]</span><span class="optional">[</span>, <em>opt</em><span class="optional">]</span><span class="optional">[</span>, <em>user</em><span class="optional">]</span><span class="optional">[</span>, <em>passwd</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a <a class="reference internal" href="index.html#module-pg" title="pg"><code class="xref py py-mod docutils literal"><span class="pre">pg</span></code></a> connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dbname</strong> &#8211; name of connected database (<em>None</em> = <code class="xref py py-data docutils literal"><span class="pre">defbase</span></code>)</li>
+<li><strong>host</strong> (<em>str or None</em>) &#8211; name of the server host (<em>None</em> = <code class="xref py py-data docutils literal"><span class="pre">defhost</span></code>)</li>
+<li><strong>port</strong> (<em>int</em>) &#8211; port used by the database server (-1 = <code class="xref py py-data docutils literal"><span class="pre">defport</span></code>)</li>
+<li><strong>opt</strong> (<em>str or None</em>) &#8211; connection options (<em>None</em> = <code class="xref py py-data docutils literal"><span class="pre">defopt</span></code>)</li>
+<li><strong>user</strong> (<em>str or None</em>) &#8211; PostgreSQL user (<em>None</em> = <code class="xref py py-data docutils literal"><span class="pre">defuser</span></code>)</li>
+<li><strong>passwd</strong> (<em>str or None</em>) &#8211; password for user (<em>None</em> = <code class="xref py py-data docutils literal"><span class="pre">defpasswd</span></code>)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If successful, the <a class="reference internal" href="connection.html#pg.Connection" title="pg.Connection"><code class="xref py py-class docutils literal"><span class="pre">Connection</span></code></a> handling the connection</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="connection.html#pg.Connection" title="pg.Connection"><code class="xref py py-class docutils literal"><span class="pre">Connection</span></code></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; bad argument type, or too many arguments</li>
+<li><strong>SyntaxError</strong> &#8211; duplicate argument definition</li>
+<li><strong>pg.InternalError</strong> &#8211; some error occurred during pg connection definition</li>
+<li><strong>Exception</strong> &#8211; (all exceptions relative to object allocation)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function opens a connection to a specified database on a given
+PostgreSQL server. You can use keywords here, as described in the
+Python tutorial. The names of the keywords are the name of the
+parameters given in the syntax line. For a precise description
+of the parameters, please refer to the PostgreSQL user manual.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pg</span>
+
+<span class="n">con1</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;testdb&#39;</span><span class="p">,</span> <span class="s">&#39;myhost&#39;</span><span class="p">,</span> <span class="mi">5432</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;bob&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+<span class="n">con2</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbname</span><span class="o">=</span><span class="s">&#39;testdb&#39;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s">&#39;bob&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-set-defhost-default-server-host-dv">
+<h2>get/set_defhost &#8211; default server host [DV]<a class="headerlink" href="#get-set-defhost-default-server-host-dv" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_defhost">
+<code class="descclassname">pg.</code><code class="descname">get_defhost</code><span class="sig-paren">(</span><em>host</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_defhost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default host</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the current default host specification</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str or None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns the current default host specification,
+or <code class="docutils literal"><span class="pre">None</span></code> if the environment variables should be used.
+Environment variables won&#8217;t be looked up.</p>
+<dl class="function">
+<dt id="pg.set_defhost">
+<code class="descclassname">pg.</code><code class="descname">set_defhost</code><span class="sig-paren">(</span><em>host</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_defhost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default host</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host</strong> (<em>str or None</em>) &#8211; the new default host specification</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the previous default host specification</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str or None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; bad argument type, or too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This methods sets the default host value for new connections.
+If <code class="docutils literal"><span class="pre">None</span></code> is supplied as parameter, environment variables will
+be used in future connections. It returns the previous setting
+for default host.</p>
+</div>
+<div class="section" id="get-set-defport-default-server-port-dv">
+<h2>get/set_defport &#8211; default server port [DV]<a class="headerlink" href="#get-set-defport-default-server-port-dv" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_defport">
+<code class="descclassname">pg.</code><code class="descname">get_defport</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_defport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default port</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the current default port specification</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns the current default port specification,
+or <code class="docutils literal"><span class="pre">None</span></code> if the environment variables should be used.
+Environment variables won&#8217;t be looked up.</p>
+<dl class="function">
+<dt id="pg.set_defport">
+<code class="descclassname">pg.</code><code class="descname">set_defport</code><span class="sig-paren">(</span><em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_defport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default port</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>port</strong> (<em>int</em>) &#8211; the new default port</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">previous default port specification</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int or None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This methods sets the default port value for new connections. If -1 is
+supplied as parameter, environment variables will be used in future
+connections. It returns the previous setting for default port.</p>
+</div>
+<div class="section" id="get-set-defopt-default-connection-options-dv">
+<h2>get/set_defopt &#8211;  default connection options [DV]<a class="headerlink" href="#get-set-defopt-default-connection-options-dv" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_defopt">
+<code class="descclassname">pg.</code><code class="descname">get_defopt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_defopt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default connection options</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the current default options specification</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str or None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns the current default connection options specification,
+or <code class="docutils literal"><span class="pre">None</span></code> if the environment variables should be used. Environment variables
+won&#8217;t be looked up.</p>
+<dl class="function">
+<dt id="pg.set_defopt">
+<code class="descclassname">pg.</code><code class="descname">set_defopt</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_defopt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default connection options</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>options</strong> (<em>str or None</em>) &#8211; the new default connection options</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">previous default options specification</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str or None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; bad argument type, or too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This methods sets the default connection options value for new connections.
+If <code class="docutils literal"><span class="pre">None</span></code> is supplied as parameter, environment variables will be used in
+future connections. It returns the previous setting for default options.</p>
+</div>
+<div class="section" id="get-set-defbase-default-database-name-dv">
+<h2>get/set_defbase &#8211; default database name [DV]<a class="headerlink" href="#get-set-defbase-default-database-name-dv" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_defbase">
+<code class="descclassname">pg.</code><code class="descname">get_defbase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_defbase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default database name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the current default database name specification</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str or None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns the current default database name specification, or
+<code class="docutils literal"><span class="pre">None</span></code> if the environment variables should be used. Environment variables
+won&#8217;t be looked up.</p>
+<dl class="function">
+<dt id="pg.set_defbase">
+<code class="descclassname">pg.</code><code class="descname">set_defbase</code><span class="sig-paren">(</span><em>base</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_defbase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default database name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>base</strong> (<em>str or None</em>) &#8211; the new default base name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the previous default database name specification</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str or None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; bad argument type, or too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method sets the default database name value for new connections. If
+<code class="docutils literal"><span class="pre">None</span></code> is supplied as parameter, environment variables will be used in
+future connections. It returns the previous setting for default host.</p>
+</div>
+<div class="section" id="get-set-defuser-default-database-user-dv">
+<h2>get/set_defuser &#8211; default database user [DV]<a class="headerlink" href="#get-set-defuser-default-database-user-dv" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_defuser">
+<code class="descclassname">pg.</code><code class="descname">get_defuser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_defuser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default database user</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the current default database user specification</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str or None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns the current default database user specification, or
+<code class="docutils literal"><span class="pre">None</span></code> if the environment variables should be used. Environment variables
+won&#8217;t be looked up.</p>
+<dl class="function">
+<dt id="pg.set_defuser">
+<code class="descclassname">pg.</code><code class="descname">set_defuser</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_defuser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default database user</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user</strong> &#8211; the new default database user</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the previous default database user specification</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str or None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; bad argument type, or too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method sets the default database user name for new connections. If
+<code class="docutils literal"><span class="pre">None</span></code> is supplied as parameter, environment variables will be used in
+future connections. It returns the previous setting for default host.</p>
+</div>
+<div class="section" id="get-set-defpasswd-default-database-password-dv">
+<h2>get/set_defpasswd &#8211; default database password [DV]<a class="headerlink" href="#get-set-defpasswd-default-database-password-dv" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_defpasswd">
+<code class="descclassname">pg.</code><code class="descname">get_defpasswd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_defpasswd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default database password</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the current default database password specification</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str or None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns the current default database password specification, or
+<code class="docutils literal"><span class="pre">None</span></code> if the environment variables should be used. Environment variables
+won&#8217;t be looked up.</p>
+<dl class="function">
+<dt id="pg.set_defpasswd">
+<code class="descclassname">pg.</code><code class="descname">set_defpasswd</code><span class="sig-paren">(</span><em>passwd</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_defpasswd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default database password</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>passwd</strong> &#8211; the new default database password</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the previous default database password specification</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str or None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; bad argument type, or too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method sets the default database password for new connections. If
+<code class="docutils literal"><span class="pre">None</span></code> is supplied as parameter, environment variables will be used in
+future connections. It returns the previous setting for default host.</p>
+</div>
+<div class="section" id="escape-string-escape-a-string-for-use-within-sql">
+<h2>escape_string &#8211; escape a string for use within SQL<a class="headerlink" href="#escape-string-escape-a-string-for-use-within-sql" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.escape_string">
+<code class="descclassname">pg.</code><code class="descname">escape_string</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.escape_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Escape a string for use within SQL</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>string</strong> (<em>str</em>) &#8211; the string that is to be escaped</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the escaped string</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; bad argument type, or too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function escapes a string for use within an SQL command.
+This is useful when inserting data values as literal constants
+in SQL commands. Certain characters (such as quotes and backslashes)
+must be escaped to prevent them from being interpreted specially
+by the SQL parser. <a class="reference internal" href="#pg.escape_string" title="pg.escape_string"><code class="xref py py-func docutils literal"><span class="pre">escape_string()</span></code></a> performs this operation.
+Note that there is also a <a class="reference internal" href="connection.html#pg.Connection" title="pg.Connection"><code class="xref py py-class docutils literal"><span class="pre">Connection</span></code></a> method with the same name
+which takes connection properties into account.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is especially important to do proper escaping when
+handling strings that were received from an untrustworthy source.
+Otherwise there is a security risk: you are vulnerable to &#8220;SQL injection&#8221;
+attacks wherein unwanted SQL commands are fed to your database.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">name</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">&quot;Name? &quot;</span><span class="p">)</span>
+<span class="n">phone</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;select phone from employees where name=&#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span>
+    <span class="o">%</span> <span class="n">escape_string</span><span class="p">(</span><span class="n">name</span><span class="p">))</span><span class="o">.</span><span class="n">getresult</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="escape-bytea-escape-binary-data-for-use-within-sql">
+<h2>escape_bytea &#8211; escape binary data for use within SQL<a class="headerlink" href="#escape-bytea-escape-binary-data-for-use-within-sql" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.escape_bytea">
+<code class="descclassname">pg.</code><code class="descname">escape_bytea</code><span class="sig-paren">(</span><em>datastring</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.escape_bytea" title="Permalink to this definition">¶</a></dt>
+<dd><p>escape binary data for use within SQL as type <code class="docutils literal"><span class="pre">bytea</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>datastring</strong> (<em>str</em>) &#8211; string containing the binary data that is to be escaped</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the escaped string</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; bad argument type, or too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Escapes binary data for use within an SQL command with the type <code class="docutils literal"><span class="pre">bytea</span></code>.
+As with <a class="reference internal" href="#pg.escape_string" title="pg.escape_string"><code class="xref py py-func docutils literal"><span class="pre">escape_string()</span></code></a>, this is only used when inserting data directly
+into an SQL command string.</p>
+<p>Note that there is also a <a class="reference internal" href="connection.html#pg.Connection" title="pg.Connection"><code class="xref py py-class docutils literal"><span class="pre">Connection</span></code></a> method with the same name
+which takes connection properties into account.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">picture</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;garfield.gif&#39;</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">con</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;update pictures set img=&#39;</span><span class="si">%s</span><span class="s">&#39; where name=&#39;Garfield&#39;&quot;</span>
+    <span class="o">%</span> <span class="n">escape_bytea</span><span class="p">(</span><span class="n">picture</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="unescape-bytea-unescape-data-that-has-been-retrieved-as-text">
+<h2>unescape_bytea &#8211; unescape data that has been retrieved as text<a class="headerlink" href="#unescape-bytea-unescape-data-that-has-been-retrieved-as-text" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.unescape_bytea">
+<code class="descclassname">pg.</code><code class="descname">unescape_bytea</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.unescape_bytea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unescape <code class="docutils literal"><span class="pre">bytea</span></code> data that has been retrieved as text</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>datastring</strong> (<em>str</em>) &#8211; the <code class="docutils literal"><span class="pre">bytea</span></code> data string that has been retrieved as text</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">byte string containing the binary data</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; bad argument type, or too many arguments</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Converts an escaped string representation of binary data stored as <code class="docutils literal"><span class="pre">bytea</span></code>
+into the raw byte string representing the binary data  &#8211; this is the reverse
+of <a class="reference internal" href="#pg.escape_bytea" title="pg.escape_bytea"><code class="xref py py-func docutils literal"><span class="pre">escape_bytea()</span></code></a>.  Since the <a class="reference internal" href="query.html#pg.Query" title="pg.Query"><code class="xref py py-class docutils literal"><span class="pre">Query</span></code></a> results will already
+return unescaped byte strings, you normally don&#8217;t have to use this method.</p>
+<p>Note that there is also a <a class="reference internal" href="db_wrapper.html#pg.DB" title="pg.DB"><code class="xref py py-class docutils literal"><span class="pre">DB</span></code></a> method with the same name
+which does exactly the same.</p>
+</div>
+<div class="section" id="get-set-namedresult-conversion-to-named-tuples">
+<h2>get/set_namedresult &#8211; conversion to named tuples<a class="headerlink" href="#get-set-namedresult-conversion-to-named-tuples" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_namedresult">
+<code class="descclassname">pg.</code><code class="descname">get_namedresult</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_namedresult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the function that converts to named tuples</p>
+</dd></dl>
+
+<p>This returns the function used by PyGreSQL to construct the result of the
+<a class="reference internal" href="query.html#pg.Query.namedresult" title="pg.Query.namedresult"><code class="xref py py-meth docutils literal"><span class="pre">Query.namedresult()</span></code></a> method.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.1.</span></p>
+</div>
+<dl class="function">
+<dt id="pg.set_namedresult">
+<code class="descclassname">pg.</code><code class="descname">set_namedresult</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_namedresult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a function that will convert to named tuples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>func</strong> &#8211; the function to be used to convert results to named tuples</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>You can use this if you want to create different kinds of named tuples
+returned by the <a class="reference internal" href="query.html#pg.Query.namedresult" title="pg.Query.namedresult"><code class="xref py py-meth docutils literal"><span class="pre">Query.namedresult()</span></code></a> method.  If you set this function
+to <em>None</em>, then it will become equal to <a class="reference internal" href="query.html#pg.Query.getresult" title="pg.Query.getresult"><code class="xref py py-meth docutils literal"><span class="pre">Query.getresult()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.1.</span></p>
+</div>
+</div>
+<div class="section" id="get-set-decimal-decimal-type-to-be-used-for-numeric-values">
+<h2>get/set_decimal &#8211; decimal type to be used for numeric values<a class="headerlink" href="#get-set-decimal-decimal-type-to-be-used-for-numeric-values" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_decimal">
+<code class="descclassname">pg.</code><code class="descname">get_decimal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_decimal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the decimal type to be used for numeric values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the Python class used for PostgreSQL numeric values</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">class</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function returns the Python class that is used by PyGreSQL to hold
+PostgreSQL numeric values. The default class is <code class="xref py py-class docutils literal"><span class="pre">decimal.Decimal</span></code>
+if available, otherwise the <code class="xref py py-class docutils literal"><span class="pre">float</span></code> type is used.</p>
+<dl class="function">
+<dt id="pg.set_decimal">
+<code class="descclassname">pg.</code><code class="descname">set_decimal</code><span class="sig-paren">(</span><em>cls</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_decimal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a decimal type to be used for numeric values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cls</strong> (<em>class</em>) &#8211; the Python class to be used for PostgreSQL numeric values</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function can be used to specify the Python class that shall
+be used by PyGreSQL to hold PostgreSQL numeric values.
+The default class is <code class="xref py py-class docutils literal"><span class="pre">decimal.Decimal</span></code> if available,
+otherwise the <code class="xref py py-class docutils literal"><span class="pre">float</span></code> type is used.</p>
+</div>
+<div class="section" id="get-set-decimal-point-decimal-mark-used-for-monetary-values">
+<h2>get/set_decimal_point &#8211; decimal mark used for monetary values<a class="headerlink" href="#get-set-decimal-point-decimal-mark-used-for-monetary-values" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_decimal_point">
+<code class="descclassname">pg.</code><code class="descname">get_decimal_point</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_decimal_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the decimal mark used for monetary values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string with one character representing the decimal mark</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function returns the decimal mark used by PyGreSQL to interpret
+PostgreSQL monetary values when converting them to decimal numbers.
+The default setting is <code class="docutils literal"><span class="pre">'.'</span></code> as a decimal point. This setting is not
+adapted automatically to the locale used by PostGreSQL, but you can use
+<a class="reference internal" href="#pg.set_decimal" title="pg.set_decimal"><code class="xref py py-func docutils literal"><span class="pre">set_decimal()</span></code></a> to set a different decimal mark manually.  A return
+value of <code class="docutils literal"><span class="pre">None</span></code> means monetary values are not interpreted as decimal
+numbers, but returned as strings including the formatting and currency.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.1.1.</span></p>
+</div>
+<dl class="function">
+<dt id="pg.set_decimal_point">
+<code class="descclassname">pg.</code><code class="descname">set_decimal_point</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_decimal_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify which decimal mark is used for interpreting monetary values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>string</strong> (<em>str</em>) &#8211; string with one character representing the decimal mark</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function can be used to specify the decimal mark used by PyGreSQL
+to interpret PostgreSQL monetary values. The default value is &#8216;.&#8217; as
+a decimal point. This value is not adapted automatically to the locale
+used by PostGreSQL, so if you are dealing with a database set to a
+locale that uses a <code class="docutils literal"><span class="pre">','</span></code> instead of <code class="docutils literal"><span class="pre">'.'</span></code> as the decimal point,
+then you need to call <code class="docutils literal"><span class="pre">set_decimal(',')</span></code> to have PyGreSQL interpret
+monetary values correctly. If you don&#8217;t want money values to be converted
+to decimal numbers, then you can call <code class="docutils literal"><span class="pre">set_decimal(None)</span></code>, which will
+cause PyGreSQL to return monetary values as strings including their
+formatting and currency.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.1.1.</span></p>
+</div>
+</div>
+<div class="section" id="get-set-bool-whether-boolean-values-are-returned-as-bool-objects">
+<h2>get/set_bool &#8211; whether boolean values are returned as bool objects<a class="headerlink" href="#get-set-bool-whether-boolean-values-are-returned-as-bool-objects" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_bool">
+<code class="descclassname">pg.</code><code class="descname">get_bool</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_bool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether boolean values are returned as bool objects</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">whether or not bool objects will be returned</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function checks whether PyGreSQL returns PostgreSQL boolean
+values converted to Python bool objects, or as <code class="docutils literal"><span class="pre">'f'</span></code> and <code class="docutils literal"><span class="pre">'t'</span></code>
+strings which are the values used internally by PostgreSQL.  By default,
+conversion to bool objects is activated, but you can disable this with
+the <a class="reference internal" href="#pg.set_bool" title="pg.set_bool"><code class="xref py py-func docutils literal"><span class="pre">set_bool()</span></code></a> function.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.2.</span></p>
+</div>
+<dl class="function">
+<dt id="pg.set_bool">
+<code class="descclassname">pg.</code><code class="descname">set_bool</code><span class="sig-paren">(</span><em>on</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_bool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set whether boolean values are returned as bool objects</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>on</strong> &#8211; whether or not bool objects shall be returned</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function can be used to specify whether PyGreSQL shall return
+PostgreSQL boolean values converted to Python bool objects, or as
+<code class="docutils literal"><span class="pre">'f'</span></code> and <code class="docutils literal"><span class="pre">'t'</span></code> strings which are the values used internally by
+PostgreSQL.  By default, conversion to bool objects is activated,
+but you can disable this by calling <code class="docutils literal"><span class="pre">set_bool(True)</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.2.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 5.0: </span>Boolean values had been returned as string by default in earlier versions.</p>
+</div>
+</div>
+<div class="section" id="get-set-array-whether-arrays-are-returned-as-list-objects">
+<h2>get/set_array &#8211; whether arrays are returned as list objects<a class="headerlink" href="#get-set-array-whether-arrays-are-returned-as-list-objects" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_array">
+<code class="descclassname">pg.</code><code class="descname">get_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether arrays are returned as list objects</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">whether or not list objects will be returned</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function checks whether PyGreSQL returns PostgreSQL arrays converted
+to Python list objects, or simply as text in the internal special output
+syntax of PostgreSQL.  By default, conversion to list objects is activated,
+but you can disable this with the <a class="reference internal" href="#pg.set_array" title="pg.set_array"><code class="xref py py-func docutils literal"><span class="pre">set_array()</span></code></a> function.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="function">
+<dt id="pg.set_array">
+<code class="descclassname">pg.</code><code class="descname">set_array</code><span class="sig-paren">(</span><em>on</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set whether arrays are returned as list objects</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>on</strong> &#8211; whether or not list objects shall be returned</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function can be used to specify whether PyGreSQL shall return PostgreSQL
+arrays converted to Python list objects, or simply as text in the internal
+special output syntax of PostgreSQL.  By default, conversion to list objects
+is activated, but you can disable this by calling <code class="docutils literal"><span class="pre">set_array(False)</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 5.0: </span>Arrays had been always returned as text strings only in earlier versions.</p>
+</div>
+</div>
+<div class="section" id="get-set-bytea-escaped-whether-bytea-data-is-returned-escaped">
+<h2>get/set_bytea_escaped &#8211; whether bytea data is returned escaped<a class="headerlink" href="#get-set-bytea-escaped-whether-bytea-data-is-returned-escaped" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_bytea_escaped">
+<code class="descclassname">pg.</code><code class="descname">get_bytea_escaped</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_bytea_escaped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether bytea values are returned as escaped strings</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">whether or not bytea objects will be returned escaped</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function checks whether PyGreSQL returns PostgreSQL <code class="docutils literal"><span class="pre">bytea</span></code> values in
+escaped form or in unescaped from as byte strings.  By default, bytea values
+will be returned unescaped as byte strings, but you can change this with the
+<a class="reference internal" href="#pg.set_bytea_escaped" title="pg.set_bytea_escaped"><code class="xref py py-func docutils literal"><span class="pre">set_bytea_escaped()</span></code></a> function.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="function">
+<dt id="pg.set_bytea_escaped">
+<code class="descclassname">pg.</code><code class="descname">set_bytea_escaped</code><span class="sig-paren">(</span><em>on</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_bytea_escaped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set whether bytea values are returned as escaped strings</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>on</strong> &#8211; whether or not bytea objects shall be returned escaped</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function can be used to specify whether PyGreSQL shall return
+PostgreSQL <code class="docutils literal"><span class="pre">bytea</span></code> values in escaped form or in unescaped from as byte
+strings.  By default, bytea values will be returned unescaped as byte
+strings, but you can change this by calling <code class="docutils literal"><span class="pre">set_bytea_escaped(True)</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 5.0: </span>Bytea data had been returned in escaped form by default in earlier versions.</p>
+</div>
+</div>
+<div class="section" id="get-set-jsondecode-decoding-json-format">
+<h2>get/set_jsondecode &#8211; decoding JSON format<a class="headerlink" href="#get-set-jsondecode-decoding-json-format" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_jsondecode">
+<code class="descclassname">pg.</code><code class="descname">get_jsondecode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_jsondecode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the function that deserializes JSON formatted strings</p>
+</dd></dl>
+
+<p>This returns the function used by PyGreSQL to construct Python objects
+from JSON formatted strings.</p>
+<dl class="function">
+<dt id="pg.set_jsondecode">
+<code class="descclassname">pg.</code><code class="descname">set_jsondecode</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_jsondecode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a function that will deserialize JSON formatted strings</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>func</strong> &#8211; the function to be used for deserializing JSON strings</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>You can use this if you do not want to deserialize JSON strings coming
+in from the database, or if want to use a different function than the
+standard function <code class="xref py py-func docutils literal"><span class="pre">json.loads()</span></code> or if you want to use it with parameters
+different from the default ones.  If you set this function to <em>None</em>, then
+the automatic deserialization of JSON strings will be deactivated.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 5.0: </span>JSON data had been always returned as text strings in earlier versions.</p>
+</div>
+</div>
+<div class="section" id="get-set-cast-hook-fallback-typecast-function">
+<h2>get/set_cast_hook &#8211; fallback typecast function<a class="headerlink" href="#get-set-cast-hook-fallback-typecast-function" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_cast_hook">
+<code class="descclassname">pg.</code><code class="descname">get_cast_hook</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_cast_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the function that handles all external typecasting</p>
+</dd></dl>
+
+<p>This returns the callback function used by PyGreSQL to provide plug-in
+Python typecast functions.</p>
+<dl class="function">
+<dt id="pg.set_cast_hook">
+<code class="descclassname">pg.</code><code class="descname">set_cast_hook</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_cast_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a function that will handle all external typecasting</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>func</strong> &#8211; the function to be used as a callback</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>If you set this function to <em>None</em>, then only the typecast functions
+implemented in the C extension module are enabled.  You normally would
+not want to change this.  Instead, you can use <a class="reference internal" href="#pg.get_typecast" title="pg.get_typecast"><code class="xref py py-func docutils literal"><span class="pre">get_typecast()</span></code></a> and
+<a class="reference internal" href="#pg.set_typecast" title="pg.set_typecast"><code class="xref py py-func docutils literal"><span class="pre">set_typecast()</span></code></a> to add or change the plug-in Python typecast functions.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+</div>
+<div class="section" id="get-set-datestyle-assume-a-fixed-date-style">
+<h2>get/set_datestyle &#8211; assume a fixed date style<a class="headerlink" href="#get-set-datestyle-assume-a-fixed-date-style" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pg.get_datestyle">
+<code class="descclassname">pg.</code><code class="descname">get_datestyle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_datestyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the assumed date style for typecasting</p>
+</dd></dl>
+
+<p>This returns the PostgreSQL date style that is silently assumed when
+typecasting dates or <em>None</em> if no fixed date style is assumed, in which case
+the date style is requested from the database when necessary (this is the
+default).  Note that this method will <em>not</em> get the date style that is
+currently set in the session or in the database.  You can get the current
+setting with the methods <a class="reference internal" href="db_wrapper.html#pg.DB.get_parameter" title="pg.DB.get_parameter"><code class="xref py py-meth docutils literal"><span class="pre">DB.get_parameter()</span></code></a> and
+<a class="reference internal" href="connection.html#pg.Connection.parameter" title="pg.Connection.parameter"><code class="xref py py-meth docutils literal"><span class="pre">Connection.parameter()</span></code></a>.  You can also get the date format corresponding
+to the current date style by calling <a class="reference internal" href="connection.html#pg.Connection.date_format" title="pg.Connection.date_format"><code class="xref py py-meth docutils literal"><span class="pre">Connection.date_format()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="function">
+<dt id="pg.set_datestyle">
+<code class="descclassname">pg.</code><code class="descname">set_datestyle</code><span class="sig-paren">(</span><em>datestyle</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_datestyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a fixed date style that shall be assumed when typecasting</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>datestyle</strong> (<em>str</em>) &#8211; the date style that shall be assumed,
+or <em>None</em> if no fixed dat style shall be assumed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>PyGreSQL is able to automatically pick up the right date style for typecasting
+date values from the database, even if you change it for the current session
+with a <code class="docutils literal"><span class="pre">SET</span> <span class="pre">DateStyle</span></code> command.  This is happens very effectively without
+an additional database request being involved.  If you still want to have
+PyGreSQL always assume a fixed date style instead, then you can set one with
+this function.  Note that calling this function will <em>not</em> alter the date
+style of the database or the current session.  You can do that by calling
+the method <a class="reference internal" href="db_wrapper.html#pg.DB.set_parameter" title="pg.DB.set_parameter"><code class="xref py py-meth docutils literal"><span class="pre">DB.set_parameter()</span></code></a> instead.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+</div>
+<div class="section" id="get-set-typecast-custom-typecasting">
+<h2>get/set_typecast &#8211; custom typecasting<a class="headerlink" href="#get-set-typecast-custom-typecasting" title="Permalink to this headline">¶</a></h2>
+<p>PyGreSQL uses typecast functions to cast the raw data coming from the
+database to Python objects suitable for the particular database type.
+These functions take a single string argument that represents the data
+to be casted and must return the casted value.</p>
+<p>PyGreSQL provides through its C extension module basic typecast functions
+for the common database types, but if you want to add more typecast functions,
+you can set these using the following functions.</p>
+<dl class="method">
+<dt id="pg.get_typecast">
+<code class="descclassname">pg.</code><code class="descname">get_typecast</code><span class="sig-paren">(</span><em>typ</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.get_typecast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the global cast function for the given database type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>typ</strong> (<em>str</em>) &#8211; PostgreSQL type name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the typecast function for the specified type</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">function or None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="method">
+<dt id="pg.set_typecast">
+<code class="descclassname">pg.</code><code class="descname">set_typecast</code><span class="sig-paren">(</span><em>typ</em>, <em>cast</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.set_typecast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a global typecast function for the given database type(s)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>typ</strong> (<em>str or int</em>) &#8211; PostgreSQL type name or list of type names</li>
+<li><strong>cast</strong> &#8211; the typecast function to be set for the specified type(s)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The typecast function must take one string object as argument and return a
+Python object into which the PostgreSQL type shall be casted.  If the function
+takes another parameter named <em>connection</em>, then the current database
+connection will also be passed to the typecast function.  This may sometimes
+be necessary to look up certain database settings.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<p>Note that database connections cache types and their cast functions using
+connection specific <a class="reference internal" href="db_types.html#pg.DbTypes" title="pg.DbTypes"><code class="xref py py-class docutils literal"><span class="pre">DbTypes</span></code></a> objects.  You can also get, set and
+reset typecast functions on the connection level using the methods
+<a class="reference internal" href="db_types.html#pg.DbTypes.get_typecast" title="pg.DbTypes.get_typecast"><code class="xref py py-meth docutils literal"><span class="pre">DbTypes.get_typecast()</span></code></a>, <a class="reference internal" href="db_types.html#pg.DbTypes.set_typecast" title="pg.DbTypes.set_typecast"><code class="xref py py-meth docutils literal"><span class="pre">DbTypes.set_typecast()</span></code></a> and
+<a class="reference internal" href="db_types.html#pg.DbTypes.reset_typecast" title="pg.DbTypes.reset_typecast"><code class="xref py py-meth docutils literal"><span class="pre">DbTypes.reset_typecast()</span></code></a> of the <a class="reference internal" href="db_wrapper.html#pg.DB.dbtypes" title="pg.DB.dbtypes"><code class="xref py py-attr docutils literal"><span class="pre">DB.dbtypes</span></code></a> object.  This will
+not affect other connections or future connections.  In order to be sure
+a global change is picked up by a running connection, you must reopen it or
+call <a class="reference internal" href="db_types.html#pg.DbTypes.reset_typecast" title="pg.DbTypes.reset_typecast"><code class="xref py py-meth docutils literal"><span class="pre">DbTypes.reset_typecast()</span></code></a> on the <a class="reference internal" href="db_wrapper.html#pg.DB.dbtypes" title="pg.DB.dbtypes"><code class="xref py py-attr docutils literal"><span class="pre">DB.dbtypes</span></code></a> object.</p>
+<p>Also note that the typecasting for all of the basic types happens already
+in the C extension module.  The typecast functions that can be set with
+the above methods are only called for the types that are not already
+supported by the C extension module.</p>
+</div>
+<div class="section" id="cast-array-record-fast-parsers-for-arrays-and-records">
+<h2>cast_array/record &#8211; fast parsers for arrays and records<a class="headerlink" href="#cast-array-record-fast-parsers-for-arrays-and-records" title="Permalink to this headline">¶</a></h2>
+<p>PosgreSQL returns arrays and records (composite types) using a special output
+syntax with several quirks that cannot easily and quickly be parsed in Python.
+Therefore the C extension module provides two fast parsers that allow quickly
+turning these text representations into Python objects: Arrays will be
+converted to Python lists, and records to Python tuples.  These fast parsers
+are used automatically by PyGreSQL in order to return arrays and records from
+database queries as lists and tuples, so you normally don&#8217;t need to call them
+directly.  You may only need them for typecasting arrays of data types that
+are not supported by default in PostgreSQL.</p>
+<dl class="function">
+<dt id="pg.cast_array">
+<code class="descclassname">pg.</code><code class="descname">cast_array</code><span class="sig-paren">(</span><em>string</em><span class="optional">[</span>, <em>cast</em><span class="optional">]</span><span class="optional">[</span>, <em>delim</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.cast_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cast a string representing a PostgreSQL array to a Python list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>str</em>) &#8211; the string with the text representation of the array</li>
+<li><strong>cast</strong> (<em>callable or None</em>) &#8211; a typecast function for the elements of the array</li>
+<li><strong>delim</strong> &#8211; delimiter character between adjacent elements</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a list representing the PostgreSQL array in Python</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">list</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; invalid argument types</li>
+<li><strong>ValueError</strong> &#8211; error in the syntax of the given array</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function takes a <em>string</em> containing the text representation of a
+PostgreSQL array (which may look like <code class="docutils literal"><span class="pre">'{{1,2}{3,4}}'</span></code> for a two-dimensional
+array), a typecast function <em>cast</em> that is called for every element, and
+an optional delimiter character <em>delim</em> (usually a comma), and returns a
+Python list representing the array (which may be nested like
+<code class="docutils literal"><span class="pre">[[1,</span> <span class="pre">2],</span> <span class="pre">[3,</span> <span class="pre">4]]</span></code> in this example).  The cast function must take a single
+argument which will be the text representation of the element and must output
+the corresponding Python object that shall be put into the list.  If you don&#8217;t
+pass a cast function or set it to <em>None</em>, then unprocessed text strings will
+be returned as elements of the array.  If you don&#8217;t pass a delimiter character,
+then a comma will be used by default.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="function">
+<dt id="pg.cast_record">
+<code class="descclassname">pg.</code><code class="descname">cast_record</code><span class="sig-paren">(</span><em>string</em><span class="optional">[</span>, <em>cast</em><span class="optional">]</span><span class="optional">[</span>, <em>delim</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.cast_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cast a string representing a PostgreSQL record to a Python list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>str</em>) &#8211; the string with the text representation of the record</li>
+<li><strong>cast</strong> (<em>callable, list or tuple of callables, or None</em>) &#8211; typecast function(s) for the elements of the record</li>
+<li><strong>delim</strong> &#8211; delimiter character between adjacent elements</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a tuple representing the PostgreSQL record in Python</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">tuple</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; invalid argument types</li>
+<li><strong>ValueError</strong> &#8211; error in the syntax of the given array</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function takes a <em>string</em> containing the text representation of a
+PostgreSQL record (which may look like <code class="docutils literal"><span class="pre">'(1,a,2,b)'</span></code> for a record composed
+of four fields), a typecast function <em>cast</em> that is called for every element,
+or a list or tuple of such functions corresponding to the individual fields
+of the record, and an optional delimiter character <em>delim</em> (usually a comma),
+and returns a Python tuple representing the record (which may be inhomogeneous
+like <code class="docutils literal"><span class="pre">(1,</span> <span class="pre">'a',</span> <span class="pre">2,</span> <span class="pre">'b')</span></code> in this example).  The cast function(s) must take a
+single argument which will be the text representation of the element and must
+output the corresponding Python object that shall be put into the tuple.  If
+you don&#8217;t pass cast function(s) or pass <em>None</em> instead, then unprocessed text
+strings will be returned as elements of the tuple.  If you don&#8217;t pass a
+delimiter character, then a comma will be used by default.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<p>Note that besides using parentheses instead of braces, there are other subtle
+differences in escaping special characters and NULL values between the syntax
+used for arrays and the one used for composite types, which these functions
+take into account.</p>
+</div>
+<div class="section" id="type-helpers">
+<h2>Type helpers<a class="headerlink" href="#type-helpers" title="Permalink to this headline">¶</a></h2>
+<p>The module provides the following type helper functions.  You can wrap
+parameters with these functions when passing them to <a class="reference internal" href="db_wrapper.html#pg.DB.query" title="pg.DB.query"><code class="xref py py-meth docutils literal"><span class="pre">DB.query()</span></code></a>
+or <a class="reference internal" href="db_wrapper.html#pg.DB.query_formatted" title="pg.DB.query_formatted"><code class="xref py py-meth docutils literal"><span class="pre">DB.query_formatted()</span></code></a> in order to give PyGreSQL a hint about the
+type of the parameters, if it cannot be derived from the context.</p>
+<dl class="function">
+<dt id="pg.Bytea">
+<code class="descclassname">pg.</code><code class="descname">Bytea</code><span class="sig-paren">(</span><em>bytes</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.Bytea" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for holding a bytea value</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="function">
+<dt id="pg.HStore">
+<code class="descclassname">pg.</code><code class="descname">HStore</code><span class="sig-paren">(</span><em>dict</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.HStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for holding an hstore dictionary</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="function">
+<dt id="pg.Json">
+<code class="descclassname">pg.</code><code class="descname">Json</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.Json" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for holding an object serializable to JSON</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<p>The following additional type helper is only meaningful when used with
+<a class="reference internal" href="db_wrapper.html#pg.DB.query_formatted" title="pg.DB.query_formatted"><code class="xref py py-meth docutils literal"><span class="pre">DB.query_formatted()</span></code></a>.  It marks a parameter as text that shall be
+literally included into the SQL.  This is useful for passing table names
+for instance.</p>
+<dl class="function">
+<dt id="pg.Literal">
+<code class="descclassname">pg.</code><code class="descname">Literal</code><span class="sig-paren">(</span><em>sql</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.Literal" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for holding a literal SQL string</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+</div>
+<div class="section" id="module-constants">
+<h2>Module constants<a class="headerlink" href="#module-constants" title="Permalink to this headline">¶</a></h2>
+<p>Some constants are defined in the module dictionary.
+They are intended to be used as parameters for methods calls.
+You should refer to the libpq description in the PostgreSQL user manual
+for more information about them. These constants are:</p>
+<dl class="data">
+<dt id="pg.version">
+<code class="descclassname">pg.</code><code class="descname">version</code><a class="headerlink" href="#pg.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="pg.__version__">
+<code class="descclassname">pg.</code><code class="descname">__version__</code><a class="headerlink" href="#pg.__version__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constants that give the current version</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pg.INV_READ">
+<code class="descclassname">pg.</code><code class="descname">INV_READ</code><a class="headerlink" href="#pg.INV_READ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="pg.INV_WRITE">
+<code class="descclassname">pg.</code><code class="descname">INV_WRITE</code><a class="headerlink" href="#pg.INV_WRITE" title="Permalink to this definition">¶</a></dt>
+<dd><p>large objects access modes,
+used by <a class="reference internal" href="connection.html#pg.Connection.locreate" title="pg.Connection.locreate"><code class="xref py py-meth docutils literal"><span class="pre">Connection.locreate()</span></code></a> and <a class="reference internal" href="large_objects.html#pg.LargeObject.open" title="pg.LargeObject.open"><code class="xref py py-meth docutils literal"><span class="pre">LargeObject.open()</span></code></a></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pg.SEEK_SET">
+<code class="descclassname">pg.</code><code class="descname">SEEK_SET</code><a class="headerlink" href="#pg.SEEK_SET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="pg.SEEK_CUR">
+<code class="descclassname">pg.</code><code class="descname">SEEK_CUR</code><a class="headerlink" href="#pg.SEEK_CUR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="pg.SEEK_END">
+<code class="descclassname">pg.</code><code class="descname">SEEK_END</code><a class="headerlink" href="#pg.SEEK_END" title="Permalink to this definition">¶</a></dt>
+<dd><p>positional flags, used by <a class="reference internal" href="large_objects.html#pg.LargeObject.seek" title="pg.LargeObject.seek"><code class="xref py py-meth docutils literal"><span class="pre">LargeObject.seek()</span></code></a></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pg.TRANS_IDLE">
+<code class="descclassname">pg.</code><code class="descname">TRANS_IDLE</code><a class="headerlink" href="#pg.TRANS_IDLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="pg.TRANS_ACTIVE">
+<code class="descclassname">pg.</code><code class="descname">TRANS_ACTIVE</code><a class="headerlink" href="#pg.TRANS_ACTIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="pg.TRANS_INTRANS">
+<code class="descclassname">pg.</code><code class="descname">TRANS_INTRANS</code><a class="headerlink" href="#pg.TRANS_INTRANS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="pg.TRANS_INERROR">
+<code class="descclassname">pg.</code><code class="descname">TRANS_INERROR</code><a class="headerlink" href="#pg.TRANS_INERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="pg.TRANS_UNKNOWN">
+<code class="descclassname">pg.</code><code class="descname">TRANS_UNKNOWN</code><a class="headerlink" href="#pg.TRANS_UNKNOWN" title="Permalink to this definition">¶</a></dt>
+<dd><p>transaction states, used by <a class="reference internal" href="connection.html#pg.Connection.transaction" title="pg.Connection.transaction"><code class="xref py py-meth docutils literal"><span class="pre">Connection.transaction()</span></code></a></p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p><div class="sphinxlocaltoc">
+    <h3><a href="../../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Module functions and constants</a><ul>
+<li><a class="reference internal" href="#connect-open-a-postgresql-connection">connect &#8211; Open a PostgreSQL connection</a></li>
+<li><a class="reference internal" href="#get-set-defhost-default-server-host-dv">get/set_defhost &#8211; default server host [DV]</a></li>
+<li><a class="reference internal" href="#get-set-defport-default-server-port-dv">get/set_defport &#8211; default server port [DV]</a></li>
+<li><a class="reference internal" href="#get-set-defopt-default-connection-options-dv">get/set_defopt &#8211;  default connection options [DV]</a></li>
+<li><a class="reference internal" href="#get-set-defbase-default-database-name-dv">get/set_defbase &#8211; default database name [DV]</a></li>
+<li><a class="reference internal" href="#get-set-defuser-default-database-user-dv">get/set_defuser &#8211; default database user [DV]</a></li>
+<li><a class="reference internal" href="#get-set-defpasswd-default-database-password-dv">get/set_defpasswd &#8211; default database password [DV]</a></li>
+<li><a class="reference internal" href="#escape-string-escape-a-string-for-use-within-sql">escape_string &#8211; escape a string for use within SQL</a></li>
+<li><a class="reference internal" href="#escape-bytea-escape-binary-data-for-use-within-sql">escape_bytea &#8211; escape binary data for use within SQL</a></li>
+<li><a class="reference internal" href="#unescape-bytea-unescape-data-that-has-been-retrieved-as-text">unescape_bytea &#8211; unescape data that has been retrieved as text</a></li>
+<li><a class="reference internal" href="#get-set-namedresult-conversion-to-named-tuples">get/set_namedresult &#8211; conversion to named tuples</a></li>
+<li><a class="reference internal" href="#get-set-decimal-decimal-type-to-be-used-for-numeric-values">get/set_decimal &#8211; decimal type to be used for numeric values</a></li>
+<li><a class="reference internal" href="#get-set-decimal-point-decimal-mark-used-for-monetary-values">get/set_decimal_point &#8211; decimal mark used for monetary values</a></li>
+<li><a class="reference internal" href="#get-set-bool-whether-boolean-values-are-returned-as-bool-objects">get/set_bool &#8211; whether boolean values are returned as bool objects</a></li>
+<li><a class="reference internal" href="#get-set-array-whether-arrays-are-returned-as-list-objects">get/set_array &#8211; whether arrays are returned as list objects</a></li>
+<li><a class="reference internal" href="#get-set-bytea-escaped-whether-bytea-data-is-returned-escaped">get/set_bytea_escaped &#8211; whether bytea data is returned escaped</a></li>
+<li><a class="reference internal" href="#get-set-jsondecode-decoding-json-format">get/set_jsondecode &#8211; decoding JSON format</a></li>
+<li><a class="reference internal" href="#get-set-cast-hook-fallback-typecast-function">get/set_cast_hook &#8211; fallback typecast function</a></li>
+<li><a class="reference internal" href="#get-set-datestyle-assume-a-fixed-date-style">get/set_datestyle &#8211; assume a fixed date style</a></li>
+<li><a class="reference internal" href="#get-set-typecast-custom-typecasting">get/set_typecast &#8211; custom typecasting</a></li>
+<li><a class="reference internal" href="#cast-array-record-fast-parsers-for-arrays-and-records">cast_array/record &#8211; fast parsers for arrays and records</a></li>
+<li><a class="reference internal" href="#type-helpers">Type helpers</a></li>
+<li><a class="reference internal" href="#module-constants">Module constants</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="introduction.html"
+                          title="Previous page">&larr; Introduction</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="connection.html"
+                          title="Next page">&rarr; Connection &#8211; The connection object</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/pg/module.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="connection.html" title="Connection – The connection object"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" ><code class="docutils literal"><span class="pre">pg</span></code> &#8212; The Classic PyGreSQL Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

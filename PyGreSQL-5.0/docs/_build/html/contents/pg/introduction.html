@@ -1,0 +1,182 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="up" title="pg — The Classic PyGreSQL Interface" href="index.html" />
+    <link rel="next" title="Module functions and constants" href="module.html" />
+    <link rel="prev" title="pg — The Classic PyGreSQL Interface" href="index.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="module.html" title="Module functions and constants"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="index.html" title="pg — The Classic PyGreSQL Interface"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U"><code class="docutils literal"><span class="pre">pg</span></code> &#8212; The Classic PyGreSQL Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>You may either choose to use the &#8220;classic&#8221; PyGreSQL interface provided by
+the <a class="reference internal" href="index.html#module-pg" title="pg"><code class="xref py py-mod docutils literal"><span class="pre">pg</span></code></a> module or else the newer DB-API 2.0 compliant interface
+provided by the <a class="reference internal" href="../pgdb/index.html#module-pgdb" title="pgdb"><code class="xref py py-mod docutils literal"><span class="pre">pgdb</span></code></a> module.</p>
+<p>The following part of the documentation covers only the older <a class="reference internal" href="index.html#module-pg" title="pg"><code class="xref py py-mod docutils literal"><span class="pre">pg</span></code></a> API.</p>
+<p>The <a class="reference internal" href="index.html#module-pg" title="pg"><code class="xref py py-mod docutils literal"><span class="pre">pg</span></code></a> module handles three types of objects,</p>
+<ul class="simple">
+<li>the <code class="xref py py-class docutils literal"><span class="pre">Connection</span></code> instances, which handle the connection
+and all the requests to the database,</li>
+<li>the <code class="xref py py-class docutils literal"><span class="pre">LargeObject</span></code> instances, which handle
+all the accesses to PostgreSQL large objects,</li>
+<li>the <code class="xref py py-class docutils literal"><span class="pre">Query</span></code> instances that handle query results</li>
+</ul>
+<p>and it provides a convenient wrapper class <code class="xref py py-class docutils literal"><span class="pre">DB</span></code>
+for the basic <code class="xref py py-class docutils literal"><span class="pre">Connection</span></code> class.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">If you want to see a simple example of the use of some of these functions,
+see the <a class="reference internal" href="../examples.html"><em>Examples</em></a> page.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="index.html"
+                          title="Previous page">&larr; <code class="docutils literal"><span class="pre">pg</span></code> &#8212; The Classic PyGreSQL Interface</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="module.html"
+                          title="Next page">&rarr; Module functions and constants</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/pg/introduction.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="module.html" title="Module functions and constants"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="index.html" title="pg — The Classic PyGreSQL Interface"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" ><code class="docutils literal"><span class="pre">pg</span></code> &#8212; The Classic PyGreSQL Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

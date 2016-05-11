@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Connection – The connection object &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="up" title="pgdb — The DB-API Compliant Interface" href="index.html" />
+    <link rel="next" title="Cursor – The cursor object" href="cursor.html" />
+    <link rel="prev" title="Module functions and constants" href="module.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="cursor.html" title="Cursor – The cursor object"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="module.html" title="Module functions and constants"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U"><code class="docutils literal"><span class="pre">pgdb</span></code> &#8212; The DB-API Compliant Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="connection-the-connection-object">
+<h1>Connection &#8211; The connection object<a class="headerlink" href="#connection-the-connection-object" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pgdb.Connection">
+<em class="property">class </em><code class="descclassname">pgdb.</code><code class="descname">Connection</code><a class="headerlink" href="#pgdb.Connection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>These connection objects respond to the following methods.</p>
+<p>Note that <code class="docutils literal"><span class="pre">pgdb.Connection</span></code> objects also implement the context manager protocol,
+i.e. you can use them in a <code class="docutils literal"><span class="pre">with</span></code> statement.</p>
+<div class="section" id="close-close-the-connection">
+<h2>close &#8211; close the connection<a class="headerlink" href="#close-close-the-connection" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pgdb.Connection.close">
+<code class="descclassname">Connection.</code><code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Connection.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the connection now (rather than whenever it is deleted)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The connection will be unusable from this point forward; an <a class="reference internal" href="module.html#pgdb.Error" title="pgdb.Error"><code class="xref py py-exc docutils literal"><span class="pre">Error</span></code></a>
+(or subclass) exception will be raised if any operation is attempted with
+the connection. The same applies to all cursor objects trying to use the
+connection. Note that closing a connection without committing the changes
+first will cause an implicit rollback to be performed.</p>
+</div>
+<div class="section" id="commit-commit-the-connection">
+<h2>commit &#8211; commit the connection<a class="headerlink" href="#commit-commit-the-connection" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pgdb.Connection.commit">
+<code class="descclassname">Connection.</code><code class="descname">commit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Connection.commit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Commit any pending transaction to the database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Note that connections always use a transaction, there is no auto-commit.</p>
+</div>
+<div class="section" id="rollback-roll-back-the-connection">
+<h2>rollback &#8211; roll back the connection<a class="headerlink" href="#rollback-roll-back-the-connection" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pgdb.Connection.rollback">
+<code class="descclassname">Connection.</code><code class="descname">rollback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Connection.rollback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Roll back any pending transaction to the database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method causes the database to roll back to the start of any pending
+transaction. Closing a connection without committing the changes first will
+cause an implicit rollback to be performed.</p>
+</div>
+<div class="section" id="cursor-return-a-new-cursor-object">
+<h2>cursor &#8211; return a new cursor object<a class="headerlink" href="#cursor-return-a-new-cursor-object" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pgdb.Connection.cursor">
+<code class="descclassname">Connection.</code><code class="descname">cursor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Connection.cursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new cursor object using the connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a connection object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="cursor.html#pgdb.Cursor" title="pgdb.Cursor"><code class="xref py py-class docutils literal"><span class="pre">Cursor</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns a new <a class="reference internal" href="cursor.html#pgdb.Cursor" title="pgdb.Cursor"><code class="xref py py-class docutils literal"><span class="pre">Cursor</span></code></a> object that can be used to
+operate on the database in the way described in the next section.</p>
+</div>
+<div class="section" id="attributes-that-are-not-part-of-the-standard">
+<h2>Attributes that are not part of the standard<a class="headerlink" href="#attributes-that-are-not-part-of-the-standard" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The following attributes are not part of the DB-API 2 standard.</p>
+</div>
+<dl class="attribute">
+<dt id="pgdb.Connection.closed">
+<code class="descclassname">Connection.</code><code class="descname">closed</code><a class="headerlink" href="#pgdb.Connection.closed" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is <em>True</em> if the connection has been closed or has become invalid</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pgdb.Connection.cursor_type">
+<code class="descclassname">Connection.</code><code class="descname">cursor_type</code><a class="headerlink" href="#pgdb.Connection.cursor_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default cursor type used by the connection</p>
+</dd></dl>
+
+<p>If you want to use your own custom subclass of the <a class="reference internal" href="cursor.html#pgdb.Cursor" title="pgdb.Cursor"><code class="xref py py-class docutils literal"><span class="pre">Cursor</span></code></a> class
+with he connection, set this attribute to your custom cursor class. You will
+then get your custom cursor whenever you call <a class="reference internal" href="#pgdb.Connection.cursor" title="pgdb.Connection.cursor"><code class="xref py py-meth docutils literal"><span class="pre">Connection.cursor()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="attribute">
+<dt id="pgdb.Connection.type_cache">
+<code class="descclassname">Connection.</code><code class="descname">type_cache</code><a class="headerlink" href="#pgdb.Connection.type_cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary with the various type codes for the PostgreSQL types</p>
+</dd></dl>
+
+<p>This can be used for getting more information on the PostgreSQL database
+types or changing the typecast functions used for the connection.  See the
+description of the <a class="reference internal" href="typecache.html#pgdb.TypeCache" title="pgdb.TypeCache"><code class="xref py py-class docutils literal"><span class="pre">TypeCache</span></code></a> class for details.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p><div class="sphinxlocaltoc">
+    <h3><a href="../../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Connection &#8211; The connection object</a><ul>
+<li><a class="reference internal" href="#close-close-the-connection">close &#8211; close the connection</a></li>
+<li><a class="reference internal" href="#commit-commit-the-connection">commit &#8211; commit the connection</a></li>
+<li><a class="reference internal" href="#rollback-roll-back-the-connection">rollback &#8211; roll back the connection</a></li>
+<li><a class="reference internal" href="#cursor-return-a-new-cursor-object">cursor &#8211; return a new cursor object</a></li>
+<li><a class="reference internal" href="#attributes-that-are-not-part-of-the-standard">Attributes that are not part of the standard</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="module.html"
+                          title="Previous page">&larr; Module functions and constants</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="cursor.html"
+                          title="Next page">&rarr; Cursor &#8211; The cursor object</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/pgdb/connection.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="cursor.html" title="Cursor – The cursor object"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="module.html" title="Module functions and constants"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" ><code class="docutils literal"><span class="pre">pgdb</span></code> &#8212; The DB-API Compliant Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

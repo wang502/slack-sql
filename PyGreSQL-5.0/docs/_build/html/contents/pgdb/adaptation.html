@@ -1,0 +1,548 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Remarks on Adaptation and Typecasting &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="up" title="pgdb — The DB-API Compliant Interface" href="index.html" />
+    <link rel="next" title="A PostgreSQL Primer" href="../postgres/index.html" />
+    <link rel="prev" title="TypeCache – The internal cache for database types" href="typecache.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="../postgres/index.html" title="A PostgreSQL Primer"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="typecache.html" title="TypeCache – The internal cache for database types"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U"><code class="docutils literal"><span class="pre">pgdb</span></code> &#8212; The DB-API Compliant Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="remarks-on-adaptation-and-typecasting">
+<h1>Remarks on Adaptation and Typecasting<a class="headerlink" href="#remarks-on-adaptation-and-typecasting" title="Permalink to this headline">¶</a></h1>
+<p>Both PostgreSQL and Python have the concept of data types, but there
+are of course differences between the two type systems.  Therefore PyGreSQL
+needs to adapt Python objects to the representation required by PostgreSQL
+when passing values as query parameters, and it needs to typecast the
+representation of PostgreSQL data types returned by database queries to
+Python objects.  Here are some explanations about how this works in
+detail in case you want to better understand or change the default
+behavior of PyGreSQL.</p>
+<div class="section" id="supported-data-types">
+<h2>Supported data types<a class="headerlink" href="#supported-data-types" title="Permalink to this headline">¶</a></h2>
+<p>The following automatic data type conversions are supported by PyGreSQL
+out of the box.  If you need other automatic type conversions or want to
+change the default conversions, you can achieve this by using the methods
+explained in the next two sections.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="65%" />
+<col width="35%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PostgreSQL</th>
+<th class="head">Python</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>char, bpchar, name, text, varchar</td>
+<td>str</td>
+</tr>
+<tr class="row-odd"><td>bool</td>
+<td>bool</td>
+</tr>
+<tr class="row-even"><td>bytea</td>
+<td>bytes</td>
+</tr>
+<tr class="row-odd"><td>int2, int4, int8, oid, serial</td>
+<td>int <a class="footnote-reference" href="#int8" id="id1">[1]</a></td>
+</tr>
+<tr class="row-even"><td>int2vector</td>
+<td>list of int</td>
+</tr>
+<tr class="row-odd"><td>float4, float8</td>
+<td>float</td>
+</tr>
+<tr class="row-even"><td>numeric, money</td>
+<td>Decimal</td>
+</tr>
+<tr class="row-odd"><td>date</td>
+<td>datetime.date</td>
+</tr>
+<tr class="row-even"><td>time, timetz</td>
+<td>datetime.time</td>
+</tr>
+<tr class="row-odd"><td>timestamp, timestamptz</td>
+<td>datetime.datetime</td>
+</tr>
+<tr class="row-even"><td>interval</td>
+<td>datetime.timedelta</td>
+</tr>
+<tr class="row-odd"><td>hstore</td>
+<td>dict</td>
+</tr>
+<tr class="row-even"><td>json, jsonb</td>
+<td>list or dict</td>
+</tr>
+<tr class="row-odd"><td>uuid</td>
+<td>uuid.UUID</td>
+</tr>
+<tr class="row-even"><td>array</td>
+<td>list</td>
+</tr>
+<tr class="row-odd"><td>record</td>
+<td>tuple</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Elements of arrays and records will also be converted accordingly.</p>
+<table class="last docutils footnote" frame="void" id="int8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>int8 is converted to long in Python 2</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="adaptation-of-parameters">
+<h2>Adaptation of parameters<a class="headerlink" href="#adaptation-of-parameters" title="Permalink to this headline">¶</a></h2>
+<p>PyGreSQL knows how to adapt the common Python types to get a suitable
+representation of their values for PostgreSQL when you pass parameters
+to a query. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">con</span> <span class="o">=</span> <span class="n">pgdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameters</span> <span class="o">=</span> <span class="p">(</span><span class="mi">144</span><span class="p">,</span> <span class="mf">3.75</span><span class="p">,</span> <span class="s">&#39;hello&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">tuple</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&#39;SELECT </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+<span class="go">(144, Decimal(&#39;3.75&#39;), &#39;hello&#39;, None)</span>
+</pre></div>
+</div>
+<p>This is the result we can expect, so obviously PyGreSQL has adapted the
+parameters and sent the following query to PostgreSQL:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">SELECT</span> <span class="mi">144</span><span class="p">,</span> <span class="mi">3</span><span class="p">.</span><span class="mi">75</span><span class="p">,</span> <span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="k">NULL</span>
+</pre></div>
+</div>
+<p>Note the subtle, but important detail that even though the SQL string passed
+to <code class="xref py py-meth docutils literal"><span class="pre">cur.execute()</span></code> contains conversion specifications normally used in
+Python with the <code class="docutils literal"><span class="pre">%</span></code> operator for formatting strings, we didn&#8217;t use the <code class="docutils literal"><span class="pre">%</span></code>
+operator to format the parameters, but passed them as the second argument to
+<code class="xref py py-meth docutils literal"><span class="pre">cur.execute()</span></code>.  I.e. we <strong>didn&#8217;t</strong> write the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">tuple</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&#39;SELECT </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">parameters</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If we had done this, PostgreSQL would have complained because the parameters
+were not adapted.  Particularly, there would be no quotes around the value
+<code class="docutils literal"><span class="pre">'hello'</span></code>, so PostgreSQL would have interpreted this as a database column,
+which would have caused a <a class="reference internal" href="module.html#pgdb.ProgrammingError" title="pgdb.ProgrammingError"><code class="xref py py-exc docutils literal"><span class="pre">ProgrammingError</span></code></a>.  Also, the Python value
+<code class="docutils literal"><span class="pre">None</span></code> would have been included in the SQL command literally, instead of
+being converted to the SQL keyword <code class="docutils literal"><span class="pre">NULL</span></code>, which would have been another
+reason for PostgreSQL to complain about our bad query:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">SELECT</span> <span class="mi">144</span><span class="p">,</span> <span class="mi">3</span><span class="p">.</span><span class="mi">75</span><span class="p">,</span> <span class="n">hello</span><span class="p">,</span> <span class="k">None</span>
+</pre></div>
+</div>
+<p>Even worse, building queries with the use of the <code class="docutils literal"><span class="pre">%</span></code> operator makes us
+vulnerable to so called &#8220;SQL injection&#8221; exploits, where an attacker inserts
+malicious SQL statements into our queries that we never intended to be
+executed.  We could avoid this by carefully quoting and escaping the
+parameters, but this would be tedious and if we overlook something, our
+code will still be vulnerable.  So please don&#8217;t do this.  This cannot be
+emphasized enough, because it is such a subtle difference and using the <code class="docutils literal"><span class="pre">%</span></code>
+operator looks so natural:</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Remember to <strong>never</strong> insert parameters directly into your queries using
+the <code class="docutils literal"><span class="pre">%</span></code> operator.  Always pass the parameters separately.</p>
+</div>
+<p>The good thing is that by letting PyGreSQL do the work for you, you can treat
+all your parameters equally and don&#8217;t need to ponder where you need to put
+quotes or need to escape strings.  You can and should also always use the
+general <code class="docutils literal"><span class="pre">%s</span></code> specification instead of e.g. using <code class="docutils literal"><span class="pre">%d</span></code> for integers.
+Actually, to avoid mistakes and make it easier to insert parameters at more
+than one location, you can and should use named specifications, like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">greeting</span><span class="o">=</span><span class="s">&#39;Hello&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;HAL&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sql</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;SELECT </span><span class="si">%(greeting)s</span><span class="s"> || &#39;, &#39; || </span><span class="si">%(name)s</span><span class="s"></span>
+<span class="gp">... </span><span class="s">   || &#39;. Do you read me, &#39; || </span><span class="si">%(name)s</span><span class="s"> || &#39;?&#39;&quot;&quot;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">&#39;Hello, HAL. Do you read me, HAL?&#39;</span>
+</pre></div>
+</div>
+<p>PyGreSQL does not only adapt the basic types like <code class="docutils literal"><span class="pre">int</span></code>, <code class="docutils literal"><span class="pre">float</span></code>,
+<code class="docutils literal"><span class="pre">bool</span></code> and <code class="docutils literal"><span class="pre">str</span></code>, but also tries to make sense of Python lists and tuples.</p>
+<p>Lists are adapted as PostgreSQL arrays:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">array</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT </span><span class="si">%(array)s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">[[1, 2], [3, 4]]</span>
+</pre></div>
+</div>
+<p>Note that the query gives the value back as Python lists again.  This
+is achieved by the typecasting mechanism explained in the next section.
+The query that was actually executed was this:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">SELECT</span> <span class="nb">ARRAY</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Again, if we had inserted the list using the <code class="docutils literal"><span class="pre">%</span></code> operator without adaptation,
+the <code class="docutils literal"><span class="pre">ARRAY</span></code> keyword would have been missing in the query.</p>
+<p>Tuples are adapted as PostgreSQL composite types:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;Bond&#39;</span><span class="p">,</span> <span class="s">&#39;James&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT </span><span class="si">%(record)s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">(&#39;Bond&#39;, &#39;James&#39;)</span>
+</pre></div>
+</div>
+<p>You can also use this feature with the <code class="docutils literal"><span class="pre">IN</span></code> syntax of SQL:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="s">&#39;needle&#39;</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;needle&#39;</span><span class="p">,</span> <span class="s">&#39;haystack&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT </span><span class="si">%(what)s</span><span class="s"> IN </span><span class="si">%(where)s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Sometimes a Python type can be ambiguous. For instance, you might want
+to insert a Python list not into an array column, but into a JSON column.
+Or you want to interpret a string as a date and insert it into a DATE column.
+In this case you can give PyGreSQL a hint by using <a class="reference internal" href="types.html#type-constructors"><span>Type constructors</span></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;CREATE TABLE json_data (data json, created date)&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">data</span><span class="o">=</span><span class="n">pgdb</span><span class="o">.</span><span class="n">Json</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]),</span> <span class="n">created</span><span class="o">=</span><span class="n">pgdb</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="mi">2016</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">29</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sql</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;INSERT INTO json_data VALUES (</span><span class="si">%(data)s</span><span class="s">, </span><span class="si">%(created)s</span><span class="s">)&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT * FROM json_data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+<span class="go">Row(data=[1, 2, 3], created=&#39;2016-01-29&#39;)</span>
+</pre></div>
+</div>
+<p>Let&#8217;s think of another example where we create a table with a composite
+type in PostgreSQL:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">on_hand</span> <span class="p">(</span>
+    <span class="n">item</span>      <span class="n">inventory_item</span><span class="p">,</span>
+    <span class="k">count</span>     <span class="nb">integer</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We assume the composite type <code class="docutils literal"><span class="pre">inventory_item</span></code> has been created like this:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">CREATE</span> <span class="k">TYPE</span> <span class="n">inventory_item</span> <span class="k">AS</span> <span class="p">(</span>
+    <span class="n">name</span>            <span class="nb">text</span><span class="p">,</span>
+    <span class="n">supplier_id</span>     <span class="nb">integer</span><span class="p">,</span>
+    <span class="n">price</span>           <span class="nb">numeric</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In Python we can use a named tuple as an equivalent to this PostgreSQL type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inventory_item</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="s">&#39;inventory_item&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;supplier_id&#39;</span><span class="p">,</span> <span class="s">&#39;price&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Using the automatic adaptation of Python tuples, an item can now be
+inserted into the database and then read back as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO on_hand VALUES (</span><span class="si">%(item)s</span><span class="s">, </span><span class="si">%(count)s</span><span class="s">)&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="nb">dict</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="n">inventory_item</span><span class="p">(</span><span class="s">&#39;fuzzy dice&#39;</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mf">1.99</span><span class="p">),</span> <span class="n">count</span><span class="o">=</span><span class="mi">1000</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT * FROM on_hand&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+<span class="go">Row(item=inventory_item(name=&#39;fuzzy dice&#39;, supplier_id=42,</span>
+<span class="go">        price=Decimal(&#39;1.99&#39;)), count=1000)</span>
+</pre></div>
+</div>
+<p>However, we may not want to use named tuples, but custom Python classes
+to hold our values, like this one:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">InventoryItem</span><span class="p">:</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">supplier_id</span><span class="p">,</span> <span class="n">price</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">supplier_id</span> <span class="o">=</span> <span class="n">supplier_id</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">price</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s"> (from </span><span class="si">%s</span><span class="s">, at $</span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span>
+<span class="gp">... </span>            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">supplier_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">price</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>But when we try to insert an instance of this class in the same way, we
+will get an error:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;INSERT INTO on_hand VALUES (</span><span class="si">%(item)s</span><span class="s">, </span><span class="si">%(count)s</span><span class="s">)&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="nb">dict</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="n">InventoryItem</span><span class="p">(</span><span class="s">&#39;fuzzy dice&#39;</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mf">1.99</span><span class="p">),</span> <span class="n">count</span><span class="o">=</span><span class="mi">1000</span><span class="p">))</span>
+<span class="go">InterfaceError: Do not know how to adapt type &lt;class &#39;InventoryItem&#39;&gt;</span>
+</pre></div>
+</div>
+<p>While PyGreSQL knows how to adapt tuples, it does not know what to make out
+of our custom class.  To simply convert the object to a string using the
+<code class="docutils literal"><span class="pre">str</span></code> function is not a solution, since this yields a human readable string
+that is not useful for PostgreSQL.  However, it is possible to make such
+custom classes adapt themselves to PostgreSQL by adding a &#8220;magic&#8221; method
+with the name <code class="docutils literal"><span class="pre">__pg_repr__</span></code>, like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">InventoryItem</span><span class="p">:</span>
+<span class="go">  ...</span>
+<span class="go">  ...     ...</span>
+<span class="go">  ...</span>
+<span class="go">  ...     def __str__(self):</span>
+<span class="go">  ...         return &#39;%s (from %s, at $%s)&#39; % (</span>
+<span class="go">  ...             self.name, self.supplier_id, self.price)</span>
+<span class="go">  ...</span>
+<span class="go">  ...     def __pg_repr__(self):</span>
+<span class="go">  ...         return (self.name, self.supplier_id, self.price)</span>
+</pre></div>
+</div>
+<p>Now you can insert class instances the same way as you insert named tuples.</p>
+<p>Note that PyGreSQL adapts the result of <code class="docutils literal"><span class="pre">__pg_repr__</span></code> again if it is a
+tuple or a list.  Otherwise, it must be a properly escaped string.</p>
+</div>
+<div class="section" id="typecasting-to-python">
+<h2>Typecasting to Python<a class="headerlink" href="#typecasting-to-python" title="Permalink to this headline">¶</a></h2>
+<p>As you noticed, PyGreSQL automatically converted the PostgreSQL data to
+suitable Python objects when returning values via one of the &#8220;fetch&#8221; methods
+of a cursor.  This is done by the use of built-in typecast functions.</p>
+<p>If you want to use different typecast functions or add your own if no
+built-in typecast function is available, then this is possible using
+the <a class="reference internal" href="module.html#pgdb.set_typecast" title="pgdb.set_typecast"><code class="xref py py-func docutils literal"><span class="pre">set_typecast()</span></code></a> function.  With the <a class="reference internal" href="module.html#pgdb.get_typecast" title="pgdb.get_typecast"><code class="xref py py-func docutils literal"><span class="pre">get_typecast()</span></code></a> function
+you can check which function is currently set, and <a class="reference internal" href="module.html#pgdb.reset_typecast" title="pgdb.reset_typecast"><code class="xref py py-func docutils literal"><span class="pre">reset_typecast()</span></code></a>
+allows you to reset the typecast function to its default.  If no typecast
+function is set, then PyGreSQL will return the raw strings from the database.</p>
+<p>For instance, you will find that PyGreSQL uses the normal <code class="docutils literal"><span class="pre">int</span></code> function
+to cast PostgreSQL <code class="docutils literal"><span class="pre">int4</span></code> type values to Python:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pgdb</span><span class="o">.</span><span class="n">get_typecast</span><span class="p">(</span><span class="s">&#39;int4&#39;</span><span class="p">)</span>
+<span class="go">int</span>
+</pre></div>
+</div>
+<p>You can change this to return float values instead:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pgdb</span><span class="o">.</span><span class="n">set_typecast</span><span class="p">(</span><span class="s">&#39;int4&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">con</span> <span class="o">=</span> <span class="n">pgdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&#39;select 42::int4&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">42.0</span>
+</pre></div>
+</div>
+<p>Note that the connections cache the typecast functions, so you may need to
+reopen the database connection, or reset the cache of the connection to
+make this effective, using the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">con</span><span class="o">.</span><span class="n">type_cache</span><span class="o">.</span><span class="n">reset_typecast</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="typecache.html#pgdb.TypeCache" title="pgdb.TypeCache"><code class="xref py py-class docutils literal"><span class="pre">TypeCache</span></code></a> of the connection can also be used to change typecast
+functions locally for one database connection only.</p>
+<p>As a more useful example, we can create a typecast function that casts
+items of the composite type used as example in the previous section
+to instances of the corresponding Python class:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">con</span><span class="o">.</span><span class="n">type_cache</span><span class="o">.</span><span class="n">reset_typecast</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cast_tuple</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">type_cache</span><span class="o">.</span><span class="n">get_typecast</span><span class="p">(</span><span class="s">&#39;inventory_item&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cast_item</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">value</span><span class="p">:</span> <span class="n">InventoryItem</span><span class="p">(</span><span class="o">*</span><span class="n">cast_tuple</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">con</span><span class="o">.</span><span class="n">type_cache</span><span class="o">.</span><span class="n">set_typecast</span><span class="p">(</span><span class="s">&#39;inventory_item&#39;</span><span class="p">,</span> <span class="n">cast_item</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT * FROM on_hand&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">&#39;fuzzy dice (from 42, at $1.99)&#39;</span>
+</pre></div>
+</div>
+<p>As you saw in the last section you, PyGreSQL also has a typecast function
+for JSON, which is the default JSON decoder from the standard library.
+Let&#8217;s assume we want to use a slight variation of that decoder in which
+every integer in JSON is converted to a float in Python. This can be
+accomplished as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">loads</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cast_json</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">loads</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">parse_int</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pgdb</span><span class="o">.</span><span class="n">set_typecast</span><span class="p">(</span><span class="s">&#39;json&#39;</span><span class="p">,</span> <span class="n">cast_json</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SELECT data FROM json_data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">[1.0, 2.0, 3.0]</span>
+</pre></div>
+</div>
+<p>Note again that you may need to run <code class="docutils literal"><span class="pre">con.type_cache.reset_typecast()</span></code> to
+make this effective.  Also note that the two types <code class="docutils literal"><span class="pre">json</span></code> and <code class="docutils literal"><span class="pre">jsonb</span></code> have
+their own typecast functions, so if you use <code class="docutils literal"><span class="pre">jsonb</span></code> instead of <code class="docutils literal"><span class="pre">json</span></code>, you
+need to use this type name when setting the typecast function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pgdb</span><span class="o">.</span><span class="n">set_typecast</span><span class="p">(</span><span class="s">&#39;jsonb&#39;</span><span class="p">,</span> <span class="n">cast_json</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As one last example, let us try to typecast the geometric data type <code class="docutils literal"><span class="pre">circle</span></code>
+of PostgreSQL into a <a class="reference external" href="http://www.sympy.org">SymPy</a> <code class="docutils literal"><span class="pre">Circle</span></code> object.  Let&#8217;s
+assume we have created and populated a table with two circles, like so:</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">circle</span> <span class="p">(</span>
+    <span class="n">name</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="k">primary</span> <span class="k">key</span><span class="p">,</span> <span class="n">circle</span> <span class="n">circle</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">circle</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;(2, 3), 3&gt;&#39;</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">circle</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;(1, -1), 4&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>With PostgreSQL we can easily calculate that these two circles overlap:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT c1.circle &amp;&amp; c2.circle</span>
+<span class="gp">... </span><span class="s">    FROM circle c1, circle c2</span>
+<span class="gp">... </span><span class="s">    WHERE c1.name = &#39;C1&#39; AND c2.name = &#39;C2&#39;&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>However, calculating the intersection points between the two circles using the
+<code class="docutils literal"><span class="pre">#</span></code> operator does not work (at least not as of PostgreSQL version 9.5).
+So let&#8217; resort to SymPy to find out.  To ease importing circles from
+PostgreSQL to SymPy, we create and register the following typecast function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Circle</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">cast_circle</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">p</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">Circle</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span> <span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pgdb</span><span class="o">.</span><span class="n">set_typecast</span><span class="p">(</span><span class="s">&#39;circle&#39;</span><span class="p">,</span> <span class="n">cast_circle</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we can import the circles in the table into Python quite easily:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">circle</span> <span class="o">=</span> <span class="p">{</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">circle</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="s">&quot;SELECT * FROM circle&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()}</span>
+</pre></div>
+</div>
+<p>The result is a dictionary mapping circle names to SymPy <code class="docutils literal"><span class="pre">Circle</span></code> objects.
+We can verify that the circles have been imported correctly:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">circle</span>
+<span class="go">{&#39;C1&#39;: Circle(Point(2, 3), 3.0),</span>
+<span class="go"> &#39;C2&#39;: Circle(Point(1, -1), 4.0)}</span>
+</pre></div>
+</div>
+<p>Finally we can find the exact intersection points with SymPy:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">circle</span><span class="p">[</span><span class="s">&#39;C1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">circle</span><span class="p">[</span><span class="s">&#39;C2&#39;</span><span class="p">])</span>
+<span class="go">[Point(29/17 + 64564173230121*sqrt(17)/100000000000000,</span>
+<span class="go">    -80705216537651*sqrt(17)/500000000000000 + 31/17),</span>
+<span class="go"> Point(-64564173230121*sqrt(17)/100000000000000 + 29/17,</span>
+<span class="go">    80705216537651*sqrt(17)/500000000000000 + 31/17)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p><div class="sphinxlocaltoc">
+    <h3><a href="../../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Remarks on Adaptation and Typecasting</a><ul>
+<li><a class="reference internal" href="#supported-data-types">Supported data types</a></li>
+<li><a class="reference internal" href="#adaptation-of-parameters">Adaptation of parameters</a></li>
+<li><a class="reference internal" href="#typecasting-to-python">Typecasting to Python</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="typecache.html"
+                          title="Previous page">&larr; TypeCache &#8211; The internal cache for database types</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="../postgres/index.html"
+                          title="Next page">&rarr; A PostgreSQL Primer</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/pgdb/adaptation.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="../postgres/index.html" title="A PostgreSQL Primer"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="typecache.html" title="TypeCache – The internal cache for database types"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" ><code class="docutils literal"><span class="pre">pgdb</span></code> &#8212; The DB-API Compliant Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

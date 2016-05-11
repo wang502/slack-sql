@@ -1,0 +1,462 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Type – Type objects and constructors &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="up" title="pgdb — The DB-API Compliant Interface" href="index.html" />
+    <link rel="next" title="TypeCache – The internal cache for database types" href="typecache.html" />
+    <link rel="prev" title="Cursor – The cursor object" href="cursor.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="typecache.html" title="TypeCache – The internal cache for database types"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="cursor.html" title="Cursor – The cursor object"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U"><code class="docutils literal"><span class="pre">pgdb</span></code> &#8212; The DB-API Compliant Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="type-type-objects-and-constructors">
+<h1>Type &#8211; Type objects and constructors<a class="headerlink" href="#type-type-objects-and-constructors" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="type-constructors">
+<span id="id1"></span><h2>Type constructors<a class="headerlink" href="#type-constructors" title="Permalink to this headline">¶</a></h2>
+<p>For binding to an operation&#8217;s input parameters, PostgreSQL needs to have
+the input in a particular format.  However, from the parameters to the
+<a class="reference internal" href="cursor.html#pgdb.Cursor.execute" title="pgdb.Cursor.execute"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.execute()</span></code></a> and <a class="reference internal" href="cursor.html#pgdb.Cursor.executemany" title="pgdb.Cursor.executemany"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.executemany()</span></code></a> methods it is not
+always obvious as which PostgreSQL data types they shall be bound.
+For instance, a Python string could be bound as a simple <code class="docutils literal"><span class="pre">char</span></code> value,
+or also as a <code class="docutils literal"><span class="pre">date</span></code> or a <code class="docutils literal"><span class="pre">time</span></code>.  Or a list could be bound as a
+<code class="docutils literal"><span class="pre">array</span></code> or a <code class="docutils literal"><span class="pre">json</span></code> object.  To make the intention clear in such cases,
+you can wrap the parameters in type helper objects.  PyGreSQL provides the
+constructors defined below to create such objects that can hold special values.
+When passed to the cursor methods, PyGreSQL can then detect the proper type
+of the input parameter and bind it accordingly.</p>
+<p>The <a class="reference internal" href="index.html#module-pgdb" title="pgdb"><code class="xref py py-mod docutils literal"><span class="pre">pgdb</span></code></a> module exports the following type constructors as part of
+the DB-API 2 standard:</p>
+<dl class="function">
+<dt id="pgdb.Date">
+<code class="descclassname">pgdb.</code><code class="descname">Date</code><span class="sig-paren">(</span><em>year</em>, <em>month</em>, <em>day</em><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct an object holding a date value</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pgdb.Time">
+<code class="descclassname">pgdb.</code><code class="descname">Time</code><span class="sig-paren">(</span><em>hour</em><span class="optional">[</span>, <em>minute</em><span class="optional">]</span><span class="optional">[</span>, <em>second</em><span class="optional">]</span><span class="optional">[</span>, <em>microsecond</em><span class="optional">]</span><span class="optional">[</span>, <em>tzinfo</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct an object holding a time value</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pgdb.Timestamp">
+<code class="descclassname">pgdb.</code><code class="descname">Timestamp</code><span class="sig-paren">(</span><em>year</em>, <em>month</em>, <em>day</em><span class="optional">[</span>, <em>hour</em><span class="optional">]</span><span class="optional">[</span>, <em>minute</em><span class="optional">]</span><span class="optional">[</span>, <em>second</em><span class="optional">]</span><span class="optional">[</span>, <em>microsecond</em><span class="optional">]</span><span class="optional">[</span>, <em>tzinfo</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct an object holding a time stamp value</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pgdb.DateFromTicks">
+<code class="descclassname">pgdb.</code><code class="descname">DateFromTicks</code><span class="sig-paren">(</span><em>ticks</em><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.DateFromTicks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct an object holding a date value from the given <em>ticks</em> value</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pgdb.TimeFromTicks">
+<code class="descclassname">pgdb.</code><code class="descname">TimeFromTicks</code><span class="sig-paren">(</span><em>ticks</em><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.TimeFromTicks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct an object holding a time value from the given <em>ticks</em> value</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pgdb.TimestampFromTicks">
+<code class="descclassname">pgdb.</code><code class="descname">TimestampFromTicks</code><span class="sig-paren">(</span><em>ticks</em><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.TimestampFromTicks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct an object holding a time stamp from the given <em>ticks</em> value</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pgdb.Binary">
+<code class="descclassname">pgdb.</code><code class="descname">Binary</code><span class="sig-paren">(</span><em>bytes</em><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct an object capable of holding a (long) binary string value</p>
+</dd></dl>
+
+<p>Additionally, PyGreSQL provides the following constructors for PostgreSQL
+specific data types:</p>
+<dl class="function">
+<dt id="pgdb.Interval">
+<code class="descclassname">pgdb.</code><code class="descname">Interval</code><span class="sig-paren">(</span><em>days</em>, <em>hours=0</em>, <em>minutes=0</em>, <em>seconds=0</em>, <em>microseconds=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct an object holding a time interval value</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="function">
+<dt id="pgdb.Uuid">
+<code class="descclassname">pgdb.</code><code class="descname">Uuid</code><span class="sig-paren">(</span><span class="optional">[</span><em>hex</em><span class="optional">]</span><span class="optional">[</span>, <em>bytes</em><span class="optional">]</span><span class="optional">[</span>, <em>bytes_le</em><span class="optional">]</span><span class="optional">[</span>, <em>fields</em><span class="optional">]</span><span class="optional">[</span>, <em>int</em><span class="optional">]</span><span class="optional">[</span>, <em>version</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Uuid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct an object holding a UUID value</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="function">
+<dt id="pgdb.Hstore">
+<code class="descclassname">pgdb.</code><code class="descname">Hstore</code><span class="sig-paren">(</span><em>dict</em><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Hstore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a wrapper for holding an hstore dictionary</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="function">
+<dt id="pgdb.Json">
+<code class="descclassname">pgdb.</code><code class="descname">Json</code><span class="sig-paren">(</span><em>obj</em><span class="optional">[</span>, <em>encode</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a wrapper for holding an object serializable to JSON</p>
+<p>You can pass an optional serialization function as a parameter.
+By default, PyGreSQL uses <code class="xref py py-func docutils literal"><span class="pre">json.dumps()</span></code> to serialize it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pgdb.Literal">
+<code class="descclassname">pgdb.</code><code class="descname">Literal</code><span class="sig-paren">(</span><em>sql</em><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Literal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a wrapper for holding a literal SQL string</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<p>Example for using a type constructor:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;create table jsondata (data jsonb)&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;John Doe&#39;</span><span class="p">,</span> <span class="s">&#39;kids&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Johnnie&#39;</span><span class="p">,</span> <span class="s">&#39;Janie&#39;</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;insert into jsondata values (</span><span class="si">%s</span><span class="s">)&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">Json</span><span class="p">(</span><span class="n">data</span><span class="p">)])</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">SQL <code class="docutils literal"><span class="pre">NULL</span></code> values are always represented by the Python <em>None</em> singleton
+on input and output.</p>
+</div>
+</div>
+<div class="section" id="type-objects">
+<span id="id2"></span><h2>Type objects<a class="headerlink" href="#type-objects" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pgdb.Type">
+<em class="property">class </em><code class="descclassname">pgdb.</code><code class="descname">Type</code><a class="headerlink" href="#pgdb.Type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <a class="reference internal" href="cursor.html#pgdb.Cursor.description" title="pgdb.Cursor.description"><code class="xref py py-attr docutils literal"><span class="pre">Cursor.description</span></code></a> attribute returns information about each
+of the result columns of a query.  The <em>type_code</em> must compare equal to one
+of the <a class="reference internal" href="#pgdb.Type" title="pgdb.Type"><code class="xref py py-class docutils literal"><span class="pre">Type</span></code></a> objects defined below.  Type objects can be equal to
+more than one type code (e.g. <code class="xref py py-class docutils literal"><span class="pre">DATETIME</span></code> is equal to the type codes
+for <code class="docutils literal"><span class="pre">date</span></code>, <code class="docutils literal"><span class="pre">time</span></code> and <code class="docutils literal"><span class="pre">timestamp</span></code> columns).</p>
+<p>The pgdb module exports the following <a class="reference internal" href="#pgdb.Type" title="pgdb.Type"><code class="xref py py-class docutils literal"><span class="pre">Type</span></code></a> objects as part of the
+DB-API 2 standard:</p>
+<dl class="object">
+<dt>
+<code class="descname">STRING</code></dt>
+<dd><p>Used to describe columns that are string-based (e.g. <code class="docutils literal"><span class="pre">char</span></code>, <code class="docutils literal"><span class="pre">varchar</span></code>, <code class="docutils literal"><span class="pre">text</span></code>)</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">BINARY</code></dt>
+<dd><p>Used to describe (long) binary columns (<code class="docutils literal"><span class="pre">bytea</span></code>)</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">NUMBER</code></dt>
+<dd><p>Used to describe numeric columns (e.g. <code class="docutils literal"><span class="pre">int</span></code>, <code class="docutils literal"><span class="pre">float</span></code>, <code class="docutils literal"><span class="pre">numeric</span></code>, <code class="docutils literal"><span class="pre">money</span></code>)</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">DATETIME</code></dt>
+<dd><p>Used to describe date/time columns (e.g. <code class="docutils literal"><span class="pre">date</span></code>, <code class="docutils literal"><span class="pre">time</span></code>, <code class="docutils literal"><span class="pre">timestamp</span></code>, <code class="docutils literal"><span class="pre">interval</span></code>)</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">ROWID</code></dt>
+<dd><p>Used to describe the <code class="docutils literal"><span class="pre">oid</span></code> column of PostgreSQL database tables</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The following more specific type objects are not part of the DB-API 2 standard.</p>
+</div>
+<dl class="object">
+<dt>
+<code class="descname">BOOL</code></dt>
+<dd><p>Used to describe <code class="docutils literal"><span class="pre">boolean</span></code> columns</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">SMALLINT</code></dt>
+<dd><p>Used to describe <code class="docutils literal"><span class="pre">smallint</span></code> columns</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">INTEGER</code></dt>
+<dd><p>Used to describe <code class="docutils literal"><span class="pre">integer</span></code> columns</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">LONG</code></dt>
+<dd><p>Used to describe <code class="docutils literal"><span class="pre">bigint</span></code> columns</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">FLOAT</code></dt>
+<dd><p>Used to describe <code class="docutils literal"><span class="pre">float</span></code> columns</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">NUMERIC</code></dt>
+<dd><p>Used to describe <code class="docutils literal"><span class="pre">numeric</span></code> columns</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">MONEY</code></dt>
+<dd><p>Used to describe <code class="docutils literal"><span class="pre">money</span></code> columns</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">DATE</code></dt>
+<dd><p>Used to describe <code class="docutils literal"><span class="pre">date</span></code> columns</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">TIME</code></dt>
+<dd><p>Used to describe <code class="docutils literal"><span class="pre">time</span></code> columns</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">TIMESTAMP</code></dt>
+<dd><p>Used to describe <code class="docutils literal"><span class="pre">timestamp</span></code> columns</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">INTERVAL</code></dt>
+<dd><p>Used to describe date and time <code class="docutils literal"><span class="pre">interval</span></code> columns</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">UUID</code></dt>
+<dd><p>Used to describe <code class="docutils literal"><span class="pre">uuid</span></code> columns</p>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">HSTORE</code></dt>
+<dd><p>Used to describe <code class="docutils literal"><span class="pre">hstore</span></code> columns</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="object">
+<dt>
+<code class="descname">JSON</code></dt>
+<dd><p>Used to describe <code class="docutils literal"><span class="pre">json</span></code> and <code class="docutils literal"><span class="pre">jsonb</span></code> columns</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="object">
+<dt>
+<code class="descname">ARRAY</code></dt>
+<dd><p>Used to describe columns containing PostgreSQL arrays</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="object">
+<dt>
+<code class="descname">RECORD</code></dt>
+<dd><p>Used to describe columns containing PostgreSQL records</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<p>Example for using some type objects:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cursor</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;create table jsondata (created date, data jsonb)&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;select * from jsondata&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">created</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">type_code</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">created</span> <span class="o">==</span> <span class="n">DATE</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">created</span> <span class="o">==</span> <span class="n">DATETIME</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">created</span> <span class="o">==</span> <span class="n">TIME</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">==</span> <span class="n">JSON</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">==</span> <span class="n">STRING</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p><div class="sphinxlocaltoc">
+    <h3><a href="../../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Type &#8211; Type objects and constructors</a><ul>
+<li><a class="reference internal" href="#type-constructors">Type constructors</a></li>
+<li><a class="reference internal" href="#type-objects">Type objects</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="cursor.html"
+                          title="Previous page">&larr; Cursor &#8211; The cursor object</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="typecache.html"
+                          title="Next page">&rarr; TypeCache &#8211; The internal cache for database types</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/pgdb/types.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="typecache.html" title="TypeCache – The internal cache for database types"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="cursor.html" title="Cursor – The cursor object"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" ><code class="docutils literal"><span class="pre">pgdb</span></code> &#8212; The DB-API Compliant Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

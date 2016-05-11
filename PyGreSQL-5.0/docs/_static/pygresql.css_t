@@ -1,0 +1,86 @@
+{% macro experimental(keyword, value) %}
+  {% if value %}
+    -moz-{{keyword}}: {{value}};
+    -webkit-{{keyword}}: {{value}};
+    -o-{{keyword}}: {{value}};
+    -ms-{{keyword}}: {{value}};
+    {{keyword}}: {{value}};
+  {% endif %}
+{% endmacro %}
+
+{% macro border_radius(value) -%}
+  {{experimental("border-radius", value)}}
+{% endmacro %}
+
+{% macro box_shadow(value) -%}
+  {{experimental("box-shadow", value)}}
+{% endmacro %}
+
+.pageheader.related {
+    text-align: left;
+    padding: 10px 15px;
+    border: 1px solid #eeeeee;
+    margin-bottom: 10px;
+    {{border_radius("1em 1em 1em 1em")}}
+    {% if theme_borderless_decor | tobool %}
+        border-top: 0;
+        border-bottom: 0;
+    {% endif %}
+}
+
+.pageheader.related .logo {
+    font-size: 36px;
+    font-style: italic;
+    letter-spacing: 5px;
+    margin-right: 2em;
+}
+
+.pageheader.related .logo {
+    font-size: 36px;
+    font-style: italic;
+    letter-spacing: 5px;
+    margin-right: 2em;
+}
+
+.pageheader.related .logo a, .pageheader.related .logo a:hover {
+    background: transparent;
+    color: {{ theme_relbarlinkcolor }};
+    border: none;
+    text-decoration: none;
+    text-shadow: none;
+    {{box_shadow("none")}}
+}
+
+.pageheader.related ul {
+    float: right;
+    margin: 2px 1em;
+}
+
+.pageheader.related li {
+    float: left;
+    margin: 0 0 0 10px;
+}
+
+.pageheader.related li a {
+    padding: 8px 12px;
+}
+
+.norelbar .subtitle {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    text-align: right;
+    padding: 0 1em;
+    margin-top: -9px;
+}
+
+.relbar-top .related.norelbar {
+    height: 22px;
+    border-bottom: 14px solid #eeeeee;
+}
+
+.relbar-bottom .related.norelbar {
+    height: 22px;
+    border-top: 14px solid #eeeeee;
+}

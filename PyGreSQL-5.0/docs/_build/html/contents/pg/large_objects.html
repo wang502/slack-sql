@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>LargeObject – Large Objects &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="up" title="pg — The Classic PyGreSQL Interface" href="index.html" />
+    <link rel="next" title="The Notification Handler" href="notification.html" />
+    <link rel="prev" title="Query methods" href="query.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="notification.html" title="The Notification Handler"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="query.html" title="Query methods"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U"><code class="docutils literal"><span class="pre">pg</span></code> &#8212; The Classic PyGreSQL Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="largeobject-large-objects">
+<h1>LargeObject &#8211; Large Objects<a class="headerlink" href="#largeobject-large-objects" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pg.LargeObject">
+<em class="property">class </em><code class="descclassname">pg.</code><code class="descname">LargeObject</code><a class="headerlink" href="#pg.LargeObject" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Objects that are instances of the class <a class="reference internal" href="#pg.LargeObject" title="pg.LargeObject"><code class="xref py py-class docutils literal"><span class="pre">LargeObject</span></code></a> are used to handle
+all the requests concerning a PostgreSQL large object. These objects embed
+and hide all the &#8220;recurrent&#8221; variables (object OID and connection), exactly
+in the same way <a class="reference internal" href="connection.html#pg.Connection" title="pg.Connection"><code class="xref py py-class docutils literal"><span class="pre">Connection</span></code></a> instances do, thus only keeping significant
+parameters in function calls. The <a class="reference internal" href="#pg.LargeObject" title="pg.LargeObject"><code class="xref py py-class docutils literal"><span class="pre">LargeObject</span></code></a> instance keeps a
+reference to the <a class="reference internal" href="connection.html#pg.Connection" title="pg.Connection"><code class="xref py py-class docutils literal"><span class="pre">Connection</span></code></a> object used for its creation, sending
+requests though with its parameters. Any modification but dereferencing the
+<a class="reference internal" href="connection.html#pg.Connection" title="pg.Connection"><code class="xref py py-class docutils literal"><span class="pre">Connection</span></code></a> object will thus affect the <a class="reference internal" href="#pg.LargeObject" title="pg.LargeObject"><code class="xref py py-class docutils literal"><span class="pre">LargeObject</span></code></a> instance.
+Dereferencing the initial <a class="reference internal" href="connection.html#pg.Connection" title="pg.Connection"><code class="xref py py-class docutils literal"><span class="pre">Connection</span></code></a> object is not a problem since
+Python won&#8217;t deallocate it before the <a class="reference internal" href="#pg.LargeObject" title="pg.LargeObject"><code class="xref py py-class docutils literal"><span class="pre">LargeObject</span></code></a> instance
+dereferences it. All functions return a generic error message on call error,
+whatever the exact error was. The <code class="xref py py-attr docutils literal"><span class="pre">error</span></code> attribute of the object allows
+to get the exact error message.</p>
+<p>See also the PostgreSQL programmer&#8217;s guide for more information about the
+large object interface.</p>
+<div class="section" id="open-open-a-large-object">
+<h2>open &#8211; open a large object<a class="headerlink" href="#open-open-a-large-object" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pg.LargeObject.open">
+<code class="descclassname">LargeObject.</code><code class="descname">open</code><span class="sig-paren">(</span><em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.LargeObject.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a large object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>mode</strong> (<em>int</em>) &#8211; open mode definition</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; invalid connection, bad parameter type, or too many parameters</li>
+<li><strong>IOError</strong> &#8211; already opened object, or open error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method opens a large object for reading/writing, in the same way than the
+Unix open() function. The mode value can be obtained by OR-ing the constants
+defined in the <a class="reference internal" href="index.html#module-pg" title="pg"><code class="xref py py-mod docutils literal"><span class="pre">pg</span></code></a> module (<a class="reference internal" href="module.html#pg.INV_READ" title="pg.INV_READ"><code class="xref py py-const docutils literal"><span class="pre">INV_READ</span></code></a>, <a class="reference internal" href="module.html#pg.INV_WRITE" title="pg.INV_WRITE"><code class="xref py py-const docutils literal"><span class="pre">INV_WRITE</span></code></a>).</p>
+</div>
+<div class="section" id="close-close-a-large-object">
+<h2>close &#8211; close a large object<a class="headerlink" href="#close-close-a-large-object" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pg.LargeObject.close">
+<code class="descclassname">LargeObject.</code><code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.LargeObject.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close a large object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; invalid connection</li>
+<li><strong>TypeError</strong> &#8211; too many parameters</li>
+<li><strong>IOError</strong> &#8211; object is not opened, or close error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method closes a previously opened large object, in the same way than
+the Unix close() function.</p>
+</div>
+<div class="section" id="read-write-tell-seek-unlink-file-like-large-object-handling">
+<h2>read, write, tell, seek, unlink &#8211; file-like large object handling<a class="headerlink" href="#read-write-tell-seek-unlink-file-like-large-object-handling" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pg.LargeObject.read">
+<code class="descclassname">LargeObject.</code><code class="descname">read</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.LargeObject.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read data from large object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>size</strong> (<em>int</em>) &#8211; maximal size of the buffer to be read</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the read buffer</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">bytes</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; invalid connection, invalid object,
+bad parameter type, or too many parameters</li>
+<li><strong>ValueError</strong> &#8211; if <cite>size</cite> is negative</li>
+<li><strong>IOError</strong> &#8211; object is not opened, or read error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function allows to read data from a large object, starting at current
+position.</p>
+<dl class="method">
+<dt id="pg.LargeObject.write">
+<code class="descclassname">LargeObject.</code><code class="descname">write</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.LargeObject.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read data to large object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>string</strong> (<em>bytes</em>) &#8211; string buffer to be written</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; invalid connection, bad parameter type, or too many parameters</li>
+<li><strong>IOError</strong> &#8211; object is not opened, or write error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function allows to write data to a large object, starting at current
+position.</p>
+<dl class="method">
+<dt id="pg.LargeObject.seek">
+<code class="descclassname">LargeObject.</code><code class="descname">seek</code><span class="sig-paren">(</span><em>offset</em>, <em>whence</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.LargeObject.seek" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change current position in large object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>offset</strong> (<em>int</em>) &#8211; position offset</li>
+<li><strong>whence</strong> (<em>int</em>) &#8211; positional parameter</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">new position in object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; invalid connection or invalid object,
+bad parameter type, or too many parameters</li>
+<li><strong>IOError</strong> &#8211; object is not opened, or seek error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method allows to move the position cursor in the large object.
+The valid values for the whence parameter are defined as constants in the
+<a class="reference internal" href="index.html#module-pg" title="pg"><code class="xref py py-mod docutils literal"><span class="pre">pg</span></code></a> module (<a class="reference internal" href="module.html#pg.SEEK_SET" title="pg.SEEK_SET"><code class="xref py py-const docutils literal"><span class="pre">SEEK_SET</span></code></a>, <a class="reference internal" href="module.html#pg.SEEK_CUR" title="pg.SEEK_CUR"><code class="xref py py-const docutils literal"><span class="pre">SEEK_CUR</span></code></a>, <a class="reference internal" href="module.html#pg.SEEK_END" title="pg.SEEK_END"><code class="xref py py-const docutils literal"><span class="pre">SEEK_END</span></code></a>).</p>
+<dl class="method">
+<dt id="pg.LargeObject.tell">
+<code class="descclassname">LargeObject.</code><code class="descname">tell</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.LargeObject.tell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return current position in large object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">current position in large object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; invalid connection or invalid object</li>
+<li><strong>TypeError</strong> &#8211; too many parameters</li>
+<li><strong>IOError</strong> &#8211; object is not opened, or seek error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method allows to get the current position in the large object.</p>
+<dl class="method">
+<dt id="pg.LargeObject.unlink">
+<code class="descclassname">LargeObject.</code><code class="descname">unlink</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.LargeObject.unlink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete large object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; invalid connection or invalid object</li>
+<li><strong>TypeError</strong> &#8211; too many parameters</li>
+<li><strong>IOError</strong> &#8211; object is not closed, or unlink error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This methods unlinks (deletes) the PostgreSQL large object.</p>
+</div>
+<div class="section" id="size-get-the-large-object-size">
+<h2>size &#8211; get the large object size<a class="headerlink" href="#size-get-the-large-object-size" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pg.LargeObject.size">
+<code class="descclassname">LargeObject.</code><code class="descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.LargeObject.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the large object size</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the large object size</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; invalid connection or invalid object</li>
+<li><strong>TypeError</strong> &#8211; too many parameters</li>
+<li><strong>IOError</strong> &#8211; object is not opened, or seek/tell error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This (composite) method allows to get the size of a large object. It was
+implemented because this function is very useful for a web interfaced
+database. Currently, the large object needs to be opened first.</p>
+</div>
+<div class="section" id="export-save-a-large-object-to-a-file">
+<h2>export &#8211; save a large object to a file<a class="headerlink" href="#export-save-a-large-object-to-a-file" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pg.LargeObject.export">
+<code class="descclassname">LargeObject.</code><code class="descname">export</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.LargeObject.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export a large object to a file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name</strong> (<em>str</em>) &#8211; file to be created</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; invalid connection or invalid object,
+bad parameter type, or too many parameters</li>
+<li><strong>IOError</strong> &#8211; object is not closed, or export error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This methods allows to dump the content of a large object in a very simple
+way. The exported file is created on the host of the program, not the
+server host.</p>
+</div>
+<div class="section" id="object-attributes">
+<h2>Object attributes<a class="headerlink" href="#object-attributes" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="#pg.LargeObject" title="pg.LargeObject"><code class="xref py py-class docutils literal"><span class="pre">LargeObject</span></code></a> objects define a read-only set of attributes that allow
+to get some information about it. These attributes are:</p>
+<dl class="attribute">
+<dt id="pg.LargeObject.oid">
+<code class="descclassname">LargeObject.</code><code class="descname">oid</code><a class="headerlink" href="#pg.LargeObject.oid" title="Permalink to this definition">¶</a></dt>
+<dd><p>the OID associated with the large object (int)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pg.LargeObject.pgcnx">
+<code class="descclassname">LargeObject.</code><code class="descname">pgcnx</code><a class="headerlink" href="#pg.LargeObject.pgcnx" title="Permalink to this definition">¶</a></dt>
+<dd><p>the <a class="reference internal" href="connection.html#pg.Connection" title="pg.Connection"><code class="xref py py-class docutils literal"><span class="pre">Connection</span></code></a> object associated with the large object</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pg.LargeObject.error">
+<code class="descclassname">LargeObject.</code><code class="descname">error</code><a class="headerlink" href="#pg.LargeObject.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>the last warning/error message of the connection (str)</p>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">In multi-threaded environments, <a class="reference internal" href="#pg.LargeObject.error" title="pg.LargeObject.error"><code class="xref py py-attr docutils literal"><span class="pre">LargeObject.error</span></code></a> may be modified by
+another thread using the same <a class="reference internal" href="connection.html#pg.Connection" title="pg.Connection"><code class="xref py py-class docutils literal"><span class="pre">Connection</span></code></a>. Remember these object
+are shared, not duplicated. You should provide some locking to be able
+if you want to check this. The <a class="reference internal" href="#pg.LargeObject.oid" title="pg.LargeObject.oid"><code class="xref py py-attr docutils literal"><span class="pre">LargeObject.oid</span></code></a> attribute is very
+interesting, because it allows you to reuse the OID later, creating the
+<a class="reference internal" href="#pg.LargeObject" title="pg.LargeObject"><code class="xref py py-class docutils literal"><span class="pre">LargeObject</span></code></a> object with a <a class="reference internal" href="connection.html#pg.Connection.getlo" title="pg.Connection.getlo"><code class="xref py py-meth docutils literal"><span class="pre">Connection.getlo()</span></code></a> method call.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p><div class="sphinxlocaltoc">
+    <h3><a href="../../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">LargeObject &#8211; Large Objects</a><ul>
+<li><a class="reference internal" href="#open-open-a-large-object">open &#8211; open a large object</a></li>
+<li><a class="reference internal" href="#close-close-a-large-object">close &#8211; close a large object</a></li>
+<li><a class="reference internal" href="#read-write-tell-seek-unlink-file-like-large-object-handling">read, write, tell, seek, unlink &#8211; file-like large object handling</a></li>
+<li><a class="reference internal" href="#size-get-the-large-object-size">size &#8211; get the large object size</a></li>
+<li><a class="reference internal" href="#export-save-a-large-object-to-a-file">export &#8211; save a large object to a file</a></li>
+<li><a class="reference internal" href="#object-attributes">Object attributes</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="query.html"
+                          title="Previous page">&larr; Query methods</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="notification.html"
+                          title="Next page">&rarr; The Notification Handler</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/pg/large_objects.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="notification.html" title="The Notification Handler"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="query.html" title="Query methods"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" ><code class="docutils literal"><span class="pre">pg</span></code> &#8212; The Classic PyGreSQL Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

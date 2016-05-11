@@ -1,0 +1,26 @@
+
+include pgmodule.c
+include pgtypes.h
+include py3c.h
+
+include pg.py
+include pgdb.py
+include setup.py
+
+include setup.cfg
+
+include README.rst
+include LICENSE.txt
+
+recursive-include tests *.py
+
+include docs/Makefile
+include docs/make.bat
+include docs/*.py
+include docs/*.rst
+recursive-include docs/community *.rst
+recursive-include docs/contents *.rst
+recursive-include docs/download *.rst
+recursive-include docs/_static *.css_t *.ico *.png
+recursive-include docs/_templates *.html
+recursive-include docs/_build/html *.css *.gif *.html *.ico *.js *.png *.txt

@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples for using the system catalogs &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="up" title="A PostgreSQL Primer" href="index.html" />
+    <link rel="next" title="Examples" href="../examples.html" />
+    <link rel="prev" title="Examples for using SQL functions" href="func.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="../examples.html" title="Examples"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="func.html" title="Examples for using SQL functions"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">A PostgreSQL Primer</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="examples-for-using-the-system-catalogs">
+<h1>Examples for using the system catalogs<a class="headerlink" href="#examples-for-using-the-system-catalogs" title="Permalink to this headline">¶</a></h1>
+<p>The system catalogs are regular tables where PostgreSQL stores schema metadata,
+such as information about tables and columns, and internal bookkeeping
+information. You can drop and recreate the tables, add columns, insert and
+update values, and severely mess up your system that way. Normally, one
+should not change the system catalogs by hand, there are always SQL commands
+to do that. For example, CREATE DATABASE inserts a row into the <em>pg_database</em>
+catalog — and actually creates the database on disk.</p>
+<p>It this section we want to show examples for how to parse some of the system
+catalogs, making queries with the classic PyGreSQL interface.</p>
+<p>We assume that you have already created a connection to the PostgreSQL
+database, as explained in the <a class="reference internal" href="basic.html"><em>Basic examples</em></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pg</span> <span class="kn">import</span> <span class="n">DB</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">DB</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">query</span>
+</pre></div>
+</div>
+<div class="section" id="lists-indices">
+<h2>Lists indices<a class="headerlink" href="#lists-indices" title="Permalink to this headline">¶</a></h2>
+<p>This query lists all simple indices in the database:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT bc.relname AS class_name,</span>
+<span class="s">        ic.relname AS index_name, a.attname</span>
+<span class="s">    FROM pg_class bc, pg_class ic, pg_index i, pg_attribute a</span>
+<span class="s">    WHERE i.indrelid = bc.oid AND i.indexrelid = ic.oid</span>
+<span class="s">        AND i.indkey[0] = a.attnum AND a.attrelid = bc.oid</span>
+<span class="s">        AND NOT a.attisdropped</span>
+<span class="s">    ORDER BY class_name, index_name, attname&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="list-user-defined-attributes">
+<h2>List user defined attributes<a class="headerlink" href="#list-user-defined-attributes" title="Permalink to this headline">¶</a></h2>
+<p>This query lists all user defined attributes and their type
+in user-defined classes:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT c.relname, a.attname, t.typname</span>
+<span class="s">    FROM pg_class c, pg_attribute a, pg_type t</span>
+<span class="s">    WHERE c.relkind = &#39;r&#39; and c.relname !~ &#39;^pg_&#39;</span>
+<span class="s">        AND c.relname !~ &#39;^Inv&#39; and a.attnum &gt; 0</span>
+<span class="s">        AND a.attrelid = c.oid and a.atttypid = t.oid</span>
+<span class="s">        AND NOT a.attisdropped</span>
+<span class="s">    ORDER BY relname, attname&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="list-user-defined-base-types">
+<h2>List user defined base types<a class="headerlink" href="#list-user-defined-base-types" title="Permalink to this headline">¶</a></h2>
+<p>This query lists all user defined base types:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT r.rolname, t.typname</span>
+<span class="s">    FROM pg_type t, pg_authid r</span>
+<span class="s">    WHERE r.oid = t.typowner</span>
+<span class="s">        AND t.typrelid = &#39;0&#39;::oid and t.typelem = &#39;0&#39;::oid</span>
+<span class="s">        AND r.rolname != &#39;postgres&#39;</span>
+<span class="s">    ORDER BY rolname, typname&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="list-operators">
+<h2>List  operators<a class="headerlink" href="#list-operators" title="Permalink to this headline">¶</a></h2>
+<p>This query lists all right-unary operators:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT o.oprname AS right_unary,</span>
+<span class="s">        lt.typname AS operand, result.typname AS return_type</span>
+<span class="s">    FROM pg_operator o, pg_type lt, pg_type result</span>
+<span class="s">    WHERE o.oprkind=&#39;r&#39; and o.oprleft = lt.oid</span>
+<span class="s">        AND o.oprresult = result.oid</span>
+<span class="s">    ORDER BY operand&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This query lists all left-unary operators:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT o.oprname AS left_unary,</span>
+<span class="s">        rt.typname AS operand, result.typname AS return_type</span>
+<span class="s">    FROM pg_operator o, pg_type rt, pg_type result</span>
+<span class="s">    WHERE o.oprkind=&#39;l&#39; AND o.oprright = rt.oid</span>
+<span class="s">        AND o.oprresult = result.oid</span>
+<span class="s">    ORDER BY operand&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>And this one lists all of the binary operators:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT o.oprname AS binary_op,</span>
+<span class="s">        rt.typname AS right_opr, lt.typname AS left_opr,</span>
+<span class="s">        result.typname AS return_type</span>
+<span class="s">    FROM pg_operator o, pg_type rt, pg_type lt, pg_type result</span>
+<span class="s">    WHERE o.oprkind = &#39;b&#39; AND o.oprright = rt.oid</span>
+<span class="s">        AND o.oprleft = lt.oid AND o.oprresult = result.oid&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="list-functions-of-a-language">
+<h2>List functions of a language<a class="headerlink" href="#list-functions-of-a-language" title="Permalink to this headline">¶</a></h2>
+<p>Given a programming language, this query returns the name, args and return
+type from all functions of a language:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">language</span> <span class="o">=</span> <span class="s">&#39;sql&#39;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT p.proname, p.pronargs, t.typname</span>
+<span class="s">    FROM pg_proc p, pg_language l, pg_type t</span>
+<span class="s">    WHERE p.prolang = l.oid AND p.prorettype = t.oid</span>
+<span class="s">        AND l.lanname = $1</span>
+<span class="s">    ORDER BY proname&quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">language</span><span class="p">,)))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="list-aggregate-functions">
+<h2>List aggregate functions<a class="headerlink" href="#list-aggregate-functions" title="Permalink to this headline">¶</a></h2>
+<p>This query lists all of the aggregate functions and the type to which
+they can be applied:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT p.proname, t.typname</span>
+<span class="s">    FROM pg_aggregate a, pg_proc p, pg_type t</span>
+<span class="s">    WHERE a.aggfnoid = p.oid</span>
+<span class="s">        and p.proargtypes[0] = t.oid</span>
+<span class="s">    ORDER BY proname, typname&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="list-operator-families">
+<h2>List operator families<a class="headerlink" href="#list-operator-families" title="Permalink to this headline">¶</a></h2>
+<p>The following query lists all defined operator families and all the operators
+included in each family:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT am.amname, opf.opfname, amop.amopopr::regoperator</span>
+<span class="s">    FROM pg_am am, pg_opfamily opf, pg_amop amop</span>
+<span class="s">    WHERE opf.opfmethod = am.oid</span>
+<span class="s">        AND amop.amopfamily = opf.oid</span>
+<span class="s">    ORDER BY amname, opfname, amopopr&quot;&quot;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p><div class="sphinxlocaltoc">
+    <h3><a href="../../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Examples for using the system catalogs</a><ul>
+<li><a class="reference internal" href="#lists-indices">Lists indices</a></li>
+<li><a class="reference internal" href="#list-user-defined-attributes">List user defined attributes</a></li>
+<li><a class="reference internal" href="#list-user-defined-base-types">List user defined base types</a></li>
+<li><a class="reference internal" href="#list-operators">List  operators</a></li>
+<li><a class="reference internal" href="#list-functions-of-a-language">List functions of a language</a></li>
+<li><a class="reference internal" href="#list-aggregate-functions">List aggregate functions</a></li>
+<li><a class="reference internal" href="#list-operator-families">List operator families</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="func.html"
+                          title="Previous page">&larr; Examples for using SQL functions</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="../examples.html"
+                          title="Next page">&rarr; Examples</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/postgres/syscat.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="../examples.html" title="Examples"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="func.html" title="Examples for using SQL functions"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" >A PostgreSQL Primer</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples for using SQL functions &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="up" title="A PostgreSQL Primer" href="index.html" />
+    <link rel="next" title="Examples for using the system catalogs" href="syscat.html" />
+    <link rel="prev" title="Examples for advanced features" href="advanced.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="syscat.html" title="Examples for using the system catalogs"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="advanced.html" title="Examples for advanced features"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">A PostgreSQL Primer</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="examples-for-using-sql-functions">
+<h1>Examples for using SQL functions<a class="headerlink" href="#examples-for-using-sql-functions" title="Permalink to this headline">¶</a></h1>
+<p>We assume that you have already created a connection to the PostgreSQL
+database, as explained in the <a class="reference internal" href="basic.html"><em>Basic examples</em></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pg</span> <span class="kn">import</span> <span class="n">DB</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">DB</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span>
+</pre></div>
+</div>
+<div class="section" id="creating-sql-functions-on-base-types">
+<h2>Creating SQL Functions on Base Types<a class="headerlink" href="#creating-sql-functions-on-base-types" title="Permalink to this headline">¶</a></h2>
+<p>A <strong>CREATE FUNCTION</strong> statement lets you create a new function that can be
+used in expressions (in SELECT, INSERT, etc.). We will start with functions
+that return values of base types.</p>
+<p>Let&#8217;s create a simple SQL function that takes no arguments and returns 1:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;CREATE FUNCTION one() RETURNS int4</span>
+<span class="gp">... </span><span class="s">    AS &#39;SELECT 1 as ONE&#39; LANGUAGE SQL&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Functions can be used in any expressions (eg. in the target&#8221;list or
+qualifications):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT one() AS answer&quot;</span><span class="p">))</span>
+<span class="go">answer</span>
+<span class="go">------</span>
+<span class="go">     1</span>
+<span class="go">(1 row)</span>
+</pre></div>
+</div>
+<p>Here&#8217;s how you create a function that takes arguments. The following function
+returns the sum of its two arguments:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;CREATE FUNCTION add_em(int4, int4) RETURNS int4</span>
+<span class="gp">... </span><span class="s">    AS $$ SELECT $1 + $2 $$ LANGUAGE SQL&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT add_em(1, 2) AS answer&quot;</span><span class="p">))</span>
+<span class="go">answer</span>
+<span class="go">------</span>
+<span class="go">     3</span>
+<span class="go">(1 row)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-sql-functions-on-composite-types">
+<h2>Creating SQL Functions on Composite Types<a class="headerlink" href="#creating-sql-functions-on-composite-types" title="Permalink to this headline">¶</a></h2>
+<p>It is also possible to create functions that return values of composite types.</p>
+<p>Before we create more sophisticated functions, let&#8217;s populate an EMP table:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;CREATE TABLE EMP (</span>
+<span class="gp">... </span><span class="s">    name   text,</span>
+<span class="gp">... </span><span class="s">    salary int4,</span>
+<span class="gp">... </span><span class="s">    age f   int4,</span>
+<span class="gp">... </span><span class="s">    dept   varchar(16))&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">emps</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;&#39;Sam&#39;, 1200, 16, &#39;toy&#39;&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s">&quot;&#39;Claire&#39;, 5000, 32, &#39;shoe&#39;&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s">&quot;&#39;Andy&#39;, -1000, 2, &#39;candy&#39;&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s">&quot;&#39;Bill&#39;, 4200, 36, &#39;shoe&#39;&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s">&quot;&#39;Ginger&#39;, 4800, 30, &#39;candy&#39;&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">emp</span> <span class="ow">in</span> <span class="n">emps</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">query</span><span class="p">(</span><span class="s">&quot;INSERT INTO EMP VALUES (</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="n">emp</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Every INSERT statement will return a &#8216;1&#8217; indicating that it has inserted
+one row into the EMP table.</p>
+<p>The argument of a function can also be a tuple. For instance, <em>double_salary</em>
+takes a tuple of the EMP table:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;CREATE FUNCTION double_salary(EMP) RETURNS int4</span>
+<span class="gp">... </span><span class="s">    AS $$ SELECT $1.salary * 2 AS salary $$ LANGUAGE SQL&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT name, double_salary(EMP) AS dream</span>
+<span class="gp">... </span><span class="s">    FROM EMP WHERE EMP.dept = &#39;toy&#39;&quot;&quot;&quot;</span><span class="p">))</span>
+<span class="go">name|dream</span>
+<span class="go">----+-----</span>
+<span class="go">Sam | 2400</span>
+<span class="go">(1 row)</span>
+</pre></div>
+</div>
+<p>The return value of a function can also be a tuple. However, make sure that the
+expressions in the target list are in the same order as the columns of EMP:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;CREATE FUNCTION new_emp() RETURNS EMP AS $$</span>
+<span class="gp">... </span><span class="s">    SELECT &#39;None&#39;::text AS name,</span>
+<span class="gp">... </span><span class="s">        1000 AS salary,</span>
+<span class="gp">... </span><span class="s">        25 AS age,</span>
+<span class="gp">... </span><span class="s">        &#39;None&#39;::varchar(16) AS dept</span>
+<span class="gp">... </span><span class="s">    $$ LANGUAGE SQL&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can then project a column out of resulting the tuple by using the
+&#8220;function notation&#8221; for projection columns (i.e. <code class="docutils literal"><span class="pre">bar(foo)</span></code> is equivalent
+to <code class="docutils literal"><span class="pre">foo.bar</span></code>). Note that <code class="docutils literal"><span class="pre">new_emp().name</span></code> isn&#8217;t supported:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT name(new_emp()) AS nobody&quot;</span><span class="p">))</span>
+<span class="go">nobody</span>
+<span class="go">------</span>
+<span class="go">None</span>
+<span class="go">(1 row)</span>
+</pre></div>
+</div>
+<p>Let&#8217;s try one more function that returns tuples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;CREATE FUNCTION high_pay() RETURNS setof EMP</span>
+<span class="gp">... </span><span class="s">        AS &#39;SELECT * FROM EMP where salary &gt; 1500&#39;</span>
+<span class="gp">... </span><span class="s">    LANGUAGE SQL&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT name(high_pay()) AS overpaid&quot;</span><span class="p">)</span>
+<span class="go">overpaid</span>
+<span class="go">--------</span>
+<span class="go">Claire</span>
+<span class="go">Bill</span>
+<span class="go">Ginger</span>
+<span class="go">(3 rows)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-sql-functions-with-multiple-sql-statements">
+<h2>Creating SQL Functions with multiple SQL statements<a class="headerlink" href="#creating-sql-functions-with-multiple-sql-statements" title="Permalink to this headline">¶</a></h2>
+<p>You can also create functions that do more than just a SELECT.</p>
+<p>You may have noticed that Andy has a negative salary. We&#8217;ll create a function
+that removes employees with negative salaries:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT * FROM EMP&quot;</span><span class="p">)</span>
+<span class="go"> name |salary|age|dept</span>
+<span class="go">------+------+---+-----</span>
+<span class="go">Sam   |  1200| 16|toy</span>
+<span class="go">Claire|  5000| 32|shoe</span>
+<span class="go">Andy  | -1000|  2|candy</span>
+<span class="go">Bill  |  4200| 36|shoe</span>
+<span class="go">Ginger|  4800| 30|candy</span>
+<span class="go">(5 rows)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;CREATE FUNCTION clean_EMP () RETURNS int4 AS</span>
+<span class="gp">... </span><span class="s">        &#39;DELETE FROM EMP WHERE EMP.salary &lt;= 0;</span>
+<span class="gp">... </span><span class="s">         SELECT 1 AS ignore_this&#39;</span>
+<span class="gp">... </span><span class="s">    LANGUAGE SQL&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT clean_EMP()&quot;</span><span class="p">)</span>
+<span class="go">clean_emp</span>
+<span class="go">---------</span>
+<span class="go">        1</span>
+<span class="go">(1 row)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT * FROM EMP&quot;</span><span class="p">)</span>
+<span class="go"> name |salary|age|dept</span>
+<span class="go">------+------+---+-----</span>
+<span class="go">Sam   |  1200| 16|toy</span>
+<span class="go">Claire|  5000| 32|shoe</span>
+<span class="go">Bill  |  4200| 36|shoe</span>
+<span class="go">Ginger|  4800| 30|candy</span>
+<span class="go">(4 rows)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="remove-functions-that-were-created-in-this-example">
+<h2>Remove functions that were created in this example<a class="headerlink" href="#remove-functions-that-were-created-in-this-example" title="Permalink to this headline">¶</a></h2>
+<p>We can remove the functions that we have created in this example and the
+table EMP, by using the DROP command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">query</span><span class="p">(</span><span class="s">&quot;DROP FUNCTION clean_EMP()&quot;</span><span class="p">)</span>
+<span class="n">query</span><span class="p">(</span><span class="s">&quot;DROP FUNCTION high_pay()&quot;</span><span class="p">)</span>
+<span class="n">query</span><span class="p">(</span><span class="s">&quot;DROP FUNCTION new_emp()&quot;</span><span class="p">)</span>
+<span class="n">query</span><span class="p">(</span><span class="s">&quot;DROP FUNCTION add_em(int4, int4)&quot;</span><span class="p">)</span>
+<span class="n">query</span><span class="p">(</span><span class="s">&quot;DROP FUNCTION one()&quot;</span><span class="p">)</span>
+<span class="n">query</span><span class="p">(</span><span class="s">&quot;DROP TABLE EMP CASCADE&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p><div class="sphinxlocaltoc">
+    <h3><a href="../../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Examples for using SQL functions</a><ul>
+<li><a class="reference internal" href="#creating-sql-functions-on-base-types">Creating SQL Functions on Base Types</a></li>
+<li><a class="reference internal" href="#creating-sql-functions-on-composite-types">Creating SQL Functions on Composite Types</a></li>
+<li><a class="reference internal" href="#creating-sql-functions-with-multiple-sql-statements">Creating SQL Functions with multiple SQL statements</a></li>
+<li><a class="reference internal" href="#remove-functions-that-were-created-in-this-example">Remove functions that were created in this example</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="advanced.html"
+                          title="Previous page">&larr; Examples for advanced features</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="syscat.html"
+                          title="Next page">&rarr; Examples for using the system catalogs</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/postgres/func.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="syscat.html" title="Examples for using the system catalogs"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="advanced.html" title="Examples for advanced features"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" >A PostgreSQL Primer</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

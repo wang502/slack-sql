@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pgdb — The DB-API Compliant Interface &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="next" title="Introduction" href="introduction.html" />
+    <link rel="prev" title="Remarks on Adaptation and Typecasting" href="../pg/adaptation.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="../pg/adaptation.html" title="Remarks on Adaptation and Typecasting"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+ 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-pgdb">
+<span id="pgdb-the-db-api-compliant-interface"></span><h1><a class="reference internal" href="#module-pgdb" title="pgdb"><code class="xref py py-mod docutils literal"><span class="pre">pgdb</span></code></a> &#8212; The DB-API Compliant Interface<a class="headerlink" href="#module-pgdb" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module.html">Module functions and constants</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module.html#connect-open-a-postgresql-connection">connect &#8211; Open a PostgreSQL connection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html#get-set-reset-typecast-control-the-global-typecast-functions">get/set/reset_typecast &#8211; Control the global typecast functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html#module-constants">Module constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html#errors-raised-by-this-module">Errors raised by this module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">Connection &#8211; The connection object</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="connection.html#close-close-the-connection">close &#8211; close the connection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="connection.html#commit-commit-the-connection">commit &#8211; commit the connection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="connection.html#rollback-roll-back-the-connection">rollback &#8211; roll back the connection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="connection.html#cursor-return-a-new-cursor-object">cursor &#8211; return a new cursor object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="connection.html#attributes-that-are-not-part-of-the-standard">Attributes that are not part of the standard</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cursor.html">Cursor &#8211; The cursor object</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cursor.html#description-details-regarding-the-result-columns">description &#8211; details regarding the result columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cursor.html#rowcount-number-of-rows-of-the-result">rowcount &#8211; number of rows of the result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cursor.html#close-close-the-cursor">close &#8211; close the cursor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cursor.html#execute-execute-a-database-operation">execute &#8211; execute a database operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cursor.html#executemany-execute-many-similar-database-operations">executemany &#8211; execute many similar database operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cursor.html#callproc-call-a-stored-procedure">callproc &#8211; Call a stored procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cursor.html#fetchone-fetch-next-row-of-the-query-result">fetchone &#8211; fetch next row of the query result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cursor.html#fetchmany-fetch-next-set-of-rows-of-the-query-result">fetchmany &#8211; fetch next set of rows of the query result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cursor.html#fetchall-fetch-all-rows-of-the-query-result">fetchall &#8211; fetch all rows of the query result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cursor.html#arraysize-the-number-of-rows-to-fetch-at-a-time">arraysize - the number of rows to fetch at a time</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cursor.html#methods-and-attributes-that-are-not-part-of-the-standard">Methods and attributes that are not part of the standard</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="types.html">Type &#8211; Type objects and constructors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="types.html#type-constructors">Type constructors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html#type-objects">Type objects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="typecache.html">TypeCache &#8211; The internal cache for database types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adaptation.html">Remarks on Adaptation and Typecasting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adaptation.html#supported-data-types">Supported data types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adaptation.html#adaptation-of-parameters">Adaptation of parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adaptation.html#typecasting-to-python">Typecasting to Python</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p><div class="sphinxlocaltoc">
+    <h3><a href="../../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">pgdb</span></code> &#8212; The DB-API Compliant Interface</a><ul>
+<li><a class="reference internal" href="#contents">Contents</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="../pg/adaptation.html"
+                          title="Previous page">&larr; Remarks on Adaptation and Typecasting</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="introduction.html"
+                          title="Next page">&rarr; Introduction</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/pgdb/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="../pg/adaptation.html" title="Remarks on Adaptation and Typecasting"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+ 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

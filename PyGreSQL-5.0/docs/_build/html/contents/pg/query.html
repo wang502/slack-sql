@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Query methods &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="up" title="pg — The Classic PyGreSQL Interface" href="index.html" />
+    <link rel="next" title="LargeObject – Large Objects" href="large_objects.html" />
+    <link rel="prev" title="The DB wrapper class" href="db_wrapper.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="large_objects.html" title="LargeObject – Large Objects"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="db_wrapper.html" title="The DB wrapper class"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U"><code class="docutils literal"><span class="pre">pg</span></code> &#8212; The Classic PyGreSQL Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="query-methods">
+<h1>Query methods<a class="headerlink" href="#query-methods" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pg.Query">
+<em class="property">class </em><code class="descclassname">pg.</code><code class="descname">Query</code><a class="headerlink" href="#pg.Query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <a class="reference internal" href="#pg.Query" title="pg.Query"><code class="xref py py-class docutils literal"><span class="pre">Query</span></code></a> object returned by <a class="reference internal" href="connection.html#pg.Connection.query" title="pg.Connection.query"><code class="xref py py-meth docutils literal"><span class="pre">Connection.query()</span></code></a> and
+<a class="reference internal" href="db_wrapper.html#pg.DB.query" title="pg.DB.query"><code class="xref py py-meth docutils literal"><span class="pre">DB.query()</span></code></a> provides the following methods for accessing
+the results of the query:</p>
+<div class="section" id="getresult-get-query-values-as-list-of-tuples">
+<h2>getresult &#8211; get query values as list of tuples<a class="headerlink" href="#getresult-get-query-values-as-list-of-tuples" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pg.Query.getresult">
+<code class="descclassname">Query.</code><code class="descname">getresult</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.Query.getresult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get query values as list of tuples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result values as a list of tuples</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">list</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; too many (any) parameters</li>
+<li><strong>MemoryError</strong> &#8211; internal memory error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns the list of the values returned by the query.
+More information about this result may be accessed using
+<a class="reference internal" href="#pg.Query.listfields" title="pg.Query.listfields"><code class="xref py py-meth docutils literal"><span class="pre">Query.listfields()</span></code></a>, <a class="reference internal" href="#pg.Query.fieldname" title="pg.Query.fieldname"><code class="xref py py-meth docutils literal"><span class="pre">Query.fieldname()</span></code></a>
+and <a class="reference internal" href="#pg.Query.fieldnum" title="pg.Query.fieldnum"><code class="xref py py-meth docutils literal"><span class="pre">Query.fieldnum()</span></code></a> methods.</p>
+<p>Note that since PyGreSQL 5.0 this will return the values of array type
+columns as Python lists.</p>
+</div>
+<div class="section" id="dictresult-get-query-values-as-list-of-dictionaries">
+<h2>dictresult &#8211; get query values as list of dictionaries<a class="headerlink" href="#dictresult-get-query-values-as-list-of-dictionaries" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pg.Query.dictresult">
+<code class="descclassname">Query.</code><code class="descname">dictresult</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.Query.dictresult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get query values as list of dictionaries</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result values as a list of dictionaries</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">list</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; too many (any) parameters</li>
+<li><strong>MemoryError</strong> &#8211; internal memory error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns the list of the values returned by the query
+with each tuple returned as a dictionary with the field names
+used as the dictionary index.</p>
+<p>Note that since PyGreSQL 5.0 this will return the values of array type
+columns as Python lists.</p>
+</div>
+<div class="section" id="namedresult-get-query-values-as-list-of-named-tuples">
+<h2>namedresult &#8211; get query values as list of named tuples<a class="headerlink" href="#namedresult-get-query-values-as-list-of-named-tuples" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pg.Query.namedresult">
+<code class="descclassname">Query.</code><code class="descname">namedresult</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.Query.namedresult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get query values as list of named tuples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">result values as a list of named tuples</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">list</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; too many (any) parameters</li>
+<li><strong>TypeError</strong> &#8211; named tuples not supported</li>
+<li><strong>MemoryError</strong> &#8211; internal memory error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns the list of the values returned by the query
+with each row returned as a named tuple with proper field names.</p>
+<p>Note that since PyGreSQL 5.0 this will return the values of array type
+columns as Python lists.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.1.</span></p>
+</div>
+</div>
+<div class="section" id="listfields-list-fields-names-of-previous-query-result">
+<h2>listfields &#8211; list fields names of previous query result<a class="headerlink" href="#listfields-list-fields-names-of-previous-query-result" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pg.Query.listfields">
+<code class="descclassname">Query.</code><code class="descname">listfields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.Query.listfields" title="Permalink to this definition">¶</a></dt>
+<dd><p>List fields names of previous query result</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">field names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; too many parameters</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns the list of names of the fields defined for the
+query result. The fields are in the same order as the result values.</p>
+</div>
+<div class="section" id="fieldname-fieldnum-field-name-number-conversion">
+<h2>fieldname, fieldnum &#8211; field name/number conversion<a class="headerlink" href="#fieldname-fieldnum-field-name-number-conversion" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pg.Query.fieldname">
+<code class="descclassname">Query.</code><code class="descname">fieldname</code><span class="sig-paren">(</span><em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.Query.fieldname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get field name from its number</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>num</strong> (<em>int</em>) &#8211; field number</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">field name</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">str</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; invalid connection, bad parameter type, or too many parameters</li>
+<li><strong>ValueError</strong> &#8211; invalid field number</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method allows to find a field name from its rank number. It can be
+useful for displaying a result. The fields are in the same order as the
+result values.</p>
+<dl class="method">
+<dt id="pg.Query.fieldnum">
+<code class="descclassname">Query.</code><code class="descname">fieldnum</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pg.Query.fieldnum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get field number from its name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name</strong> (<em>str</em>) &#8211; field name</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">field number</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; invalid connection, bad parameter type, or too many parameters</li>
+<li><strong>ValueError</strong> &#8211; unknown field name</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns a field number from its name. It can be used to
+build a function that converts result list strings to their correct
+type, using a hardcoded table definition. The number returned is the
+field rank in the result values list.</p>
+</div>
+<div class="section" id="ntuples-return-number-of-tuples-in-query-object">
+<h2>ntuples &#8211; return number of tuples in query object<a class="headerlink" href="#ntuples-return-number-of-tuples-in-query-object" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pg.Query.ntuples">
+<code class="descclassname">Query.</code><code class="descname">ntuples</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.Query.ntuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return number of tuples in query object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">number of tuples in <a class="reference internal" href="#pg.Query" title="pg.Query"><code class="xref py py-class docutils literal"><span class="pre">Query</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>TypeError</strong> &#8211; Too many arguments.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns the number of tuples found in a query.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p><div class="sphinxlocaltoc">
+    <h3><a href="../../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Query methods</a><ul>
+<li><a class="reference internal" href="#getresult-get-query-values-as-list-of-tuples">getresult &#8211; get query values as list of tuples</a></li>
+<li><a class="reference internal" href="#dictresult-get-query-values-as-list-of-dictionaries">dictresult &#8211; get query values as list of dictionaries</a></li>
+<li><a class="reference internal" href="#namedresult-get-query-values-as-list-of-named-tuples">namedresult &#8211; get query values as list of named tuples</a></li>
+<li><a class="reference internal" href="#listfields-list-fields-names-of-previous-query-result">listfields &#8211; list fields names of previous query result</a></li>
+<li><a class="reference internal" href="#fieldname-fieldnum-field-name-number-conversion">fieldname, fieldnum &#8211; field name/number conversion</a></li>
+<li><a class="reference internal" href="#ntuples-return-number-of-tuples-in-query-object">ntuples &#8211; return number of tuples in query object</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="db_wrapper.html"
+                          title="Previous page">&larr; The DB wrapper class</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="large_objects.html"
+                          title="Next page">&rarr; LargeObject &#8211; Large Objects</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/pg/query.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="large_objects.html" title="LargeObject – Large Objects"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="db_wrapper.html" title="The DB wrapper class"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" ><code class="docutils literal"><span class="pre">pg</span></code> &#8212; The Classic PyGreSQL Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

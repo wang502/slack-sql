@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The Notification Handler &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="up" title="pg — The Classic PyGreSQL Interface" href="index.html" />
+    <link rel="next" title="DbTypes – The internal cache for database types" href="db_types.html" />
+    <link rel="prev" title="LargeObject – Large Objects" href="large_objects.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="db_types.html" title="DbTypes – The internal cache for database types"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="large_objects.html" title="LargeObject – Large Objects"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U"><code class="docutils literal"><span class="pre">pg</span></code> &#8212; The Classic PyGreSQL Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="the-notification-handler">
+<h1>The Notification Handler<a class="headerlink" href="#the-notification-handler" title="Permalink to this headline">¶</a></h1>
+<p>PyGreSQL comes with a client-side asynchronous notification handler that
+was based on the <code class="docutils literal"><span class="pre">pgnotify</span></code> module written by Ng Pheng Siong.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.1.1.</span></p>
+</div>
+<div class="section" id="instantiating-the-notification-handler">
+<h2>Instantiating the notification handler<a class="headerlink" href="#instantiating-the-notification-handler" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pg.NotificationHandler">
+<em class="property">class </em><code class="descclassname">pg.</code><code class="descname">NotificationHandler</code><span class="sig-paren">(</span><em>db</em>, <em>event</em>, <em>callback</em><span class="optional">[</span>, <em>arg_dict</em><span class="optional">]</span><span class="optional">[</span>, <em>timeout</em><span class="optional">]</span><span class="optional">[</span>, <em>stop_event</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.NotificationHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance of the notification handler</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>db</strong> (<a class="reference internal" href="connection.html#pg.Connection" title="pg.Connection"><code class="xref py py-class docutils literal"><span class="pre">Connection</span></code></a>) &#8211; the database connection</li>
+<li><strong>event</strong> (<em>str</em>) &#8211; the name of an event to listen for</li>
+<li><strong>callback</strong> &#8211; a callback function</li>
+<li><strong>arg_dict</strong> (<em>dict</em>) &#8211; an optional dictionary for passing arguments</li>
+<li><strong>timeout</strong> (<em>int, float or None</em>) &#8211; the time-out when waiting for notifications</li>
+<li><strong>stop_event</strong> (<em>str</em>) &#8211; an optional different name to be used as stop event</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>You can also create an instance of the NotificationHandler using the
+<code class="xref py py-class docutils literal"><span class="pre">DB.connection_handler</span></code> method.  In this case you don&#8217;t need to
+pass a database connection because the <a class="reference internal" href="db_wrapper.html#pg.DB" title="pg.DB"><code class="xref py py-class docutils literal"><span class="pre">DB</span></code></a> connection itself
+will be used as the datebase connection for the notification handler.</p>
+<p>You must always pass the name of an <em>event</em> (notification channel) to listen
+for and a <em>callback</em> function.</p>
+<p>You can also specify a dictionary <em>arg_dict</em> that will be passed as the
+single argument to the callback function, and a <em>timeout</em> value in seconds
+(a floating point number denotes fractions of seconds).  If it is absent
+or <em>None</em>, the callers will never time out.  If the time-out is reached,
+the callback function will be called with a single argument that is <em>None</em>.
+If you set the <em>timeout</em> to <code class="docutils literal"><span class="pre">0</span></code>, the handler will poll notifications
+synchronously and return.</p>
+<p>You can specify the name of the event that will be used to signal the handler
+to stop listening as <em>stop_event</em>. By default, it will be the event name
+prefixed with <code class="docutils literal"><span class="pre">'stop_'</span></code>.</p>
+<p>All of the parameters will be also available as attributes of the
+created notification handler object.</p>
+</div>
+<div class="section" id="invoking-the-notification-handler">
+<h2>Invoking the notification handler<a class="headerlink" href="#invoking-the-notification-handler" title="Permalink to this headline">¶</a></h2>
+<p>To invoke the notification handler, just call the instance without passing
+any parameters.</p>
+<p>The handler is a loop that listens for notifications on the event and stop
+event channels.  When either of these notifications are received, its
+associated <em>pid</em>, <em>event</em> and <em>extra</em> (the payload passed with the
+notification) are inserted into its <em>arg_dict</em> dictionary and the callback
+is invoked with this dictionary as a single argument.  When the handler
+receives a stop event, it stops listening to both events and return.</p>
+<p>In the special case that the timeout of the handler has been set to <code class="docutils literal"><span class="pre">0</span></code>,
+the handler will poll all events synchronously and return.  If will keep
+listening until it receives a stop event.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">If you run this loop in another thread, don&#8217;t use the same database
+connection for database operations in the main thread.</p>
+</div>
+</div>
+<div class="section" id="sending-notifications">
+<h2>Sending notifications<a class="headerlink" href="#sending-notifications" title="Permalink to this headline">¶</a></h2>
+<p>You can send notifications by either running <code class="docutils literal"><span class="pre">NOTIFY</span></code> commands on the
+database directly, or using the following method:</p>
+<dl class="method">
+<dt id="pg.NotificationHandler.notify">
+<code class="descclassname">NotificationHandler.</code><code class="descname">notify</code><span class="sig-paren">(</span><span class="optional">[</span><em>db</em><span class="optional">]</span><span class="optional">[</span>, <em>stop</em><span class="optional">]</span><span class="optional">[</span>, <em>payload</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.NotificationHandler.notify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a notification</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>db</strong> (<a class="reference internal" href="connection.html#pg.Connection" title="pg.Connection"><code class="xref py py-class docutils literal"><span class="pre">Connection</span></code></a>) &#8211; the database connection for sending the notification</li>
+<li><strong>stop</strong> (<em>bool</em>) &#8211; whether to produce a normal event or a stop event</li>
+<li><strong>payload</strong> (<em>str</em>) &#8211; an optional payload to be sent with the notification</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method sends a notification event together with an optional <em>payload</em>.
+If you set the <em>stop</em> flag, a stop notification will be sent instead of
+a normal notification.  This will cause the handler to stop listening.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">If the notification handler is running in another thread, you must pass
+a different database connection since PyGreSQL database connections are
+not thread-safe.</p>
+</div>
+</div>
+<div class="section" id="auxiliary-methods">
+<h2>Auxiliary methods<a class="headerlink" href="#auxiliary-methods" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pg.NotificationHandler.listen">
+<code class="descclassname">NotificationHandler.</code><code class="descname">listen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.NotificationHandler.listen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start listening for the event and the stop event</p>
+</dd></dl>
+
+<p>This method is called implicitly when the handler is invoked.</p>
+<dl class="method">
+<dt id="pg.NotificationHandler.unlisten">
+<code class="descclassname">NotificationHandler.</code><code class="descname">unlisten</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.NotificationHandler.unlisten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop listening for the event and the stop event</p>
+</dd></dl>
+
+<p>This method is called implicitly when the handler receives a stop event
+or when it is closed or deleted.</p>
+<dl class="method">
+<dt id="pg.NotificationHandler.close">
+<code class="descclassname">NotificationHandler.</code><code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pg.NotificationHandler.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop listening and close the database connection</p>
+</dd></dl>
+
+<p>You can call this method instead of <a class="reference internal" href="#pg.NotificationHandler.unlisten" title="pg.NotificationHandler.unlisten"><code class="xref py py-meth docutils literal"><span class="pre">NotificationHandler.unlisten()</span></code></a>
+if you want to close not only the handler, but also the database connection
+it was created with.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p><div class="sphinxlocaltoc">
+    <h3><a href="../../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">The Notification Handler</a><ul>
+<li><a class="reference internal" href="#instantiating-the-notification-handler">Instantiating the notification handler</a></li>
+<li><a class="reference internal" href="#invoking-the-notification-handler">Invoking the notification handler</a></li>
+<li><a class="reference internal" href="#sending-notifications">Sending notifications</a></li>
+<li><a class="reference internal" href="#auxiliary-methods">Auxiliary methods</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="large_objects.html"
+                          title="Previous page">&larr; LargeObject &#8211; Large Objects</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="db_types.html"
+                          title="Next page">&rarr; DbTypes &#8211; The internal cache for database types</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/pg/notification.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="db_types.html" title="DbTypes – The internal cache for database types"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="large_objects.html" title="LargeObject – Large Objects"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" ><code class="docutils literal"><span class="pre">pg</span></code> &#8212; The Classic PyGreSQL Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

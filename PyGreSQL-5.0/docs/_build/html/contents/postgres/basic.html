@@ -1,0 +1,511 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Basic examples &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="up" title="A PostgreSQL Primer" href="index.html" />
+    <link rel="next" title="Examples for advanced features" href="advanced.html" />
+    <link rel="prev" title="A PostgreSQL Primer" href="index.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="advanced.html" title="Examples for advanced features"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="index.html" title="A PostgreSQL Primer"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">A PostgreSQL Primer</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="basic-examples">
+<h1>Basic examples<a class="headerlink" href="#basic-examples" title="Permalink to this headline">¶</a></h1>
+<p>In this section, we demonstrate how to use some of the very basic features
+of PostgreSQL using the classic PyGreSQL interface.</p>
+<div class="section" id="creating-a-connection-to-the-database">
+<h2>Creating a connection to the database<a class="headerlink" href="#creating-a-connection-to-the-database" title="Permalink to this headline">¶</a></h2>
+<p>We start by creating a <strong>connection</strong> to the PostgreSQL database:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pg</span> <span class="kn">import</span> <span class="n">DB</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">DB</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If you pass no parameters when creating the <a class="reference internal" href="../pg/db_wrapper.html#pg.DB" title="pg.DB"><code class="xref py py-class docutils literal"><span class="pre">DB</span></code></a> instance, then
+PyGreSQL will try to connect to the database on the local host that has
+the same name as the current user, and also use that name for login.</p>
+<p>You can also pass the database name, host, port and login information
+as parameters when creating the <a class="reference internal" href="../pg/db_wrapper.html#pg.DB" title="pg.DB"><code class="xref py py-class docutils literal"><span class="pre">DB</span></code></a> instance:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">DB</span><span class="p">(</span><span class="n">dbname</span><span class="o">=</span><span class="s">&#39;testdb&#39;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s">&#39;pgserver&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5432</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">user</span><span class="o">=</span><span class="s">&#39;scott&#39;</span><span class="p">,</span> <span class="n">passwd</span><span class="o">=</span><span class="s">&#39;tiger&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../pg/db_wrapper.html#pg.DB" title="pg.DB"><code class="xref py py-class docutils literal"><span class="pre">DB</span></code></a> class of which <code class="docutils literal"><span class="pre">db</span></code> is an object is a wrapper around
+the lower level <a class="reference internal" href="../pg/connection.html#pg.Connection" title="pg.Connection"><code class="xref py py-class docutils literal"><span class="pre">Connection</span></code></a> class of the <a class="reference internal" href="../pg/index.html#module-pg" title="pg"><code class="xref py py-mod docutils literal"><span class="pre">pg</span></code></a> module.
+The most important method of such connection objects is the <code class="docutils literal"><span class="pre">query</span></code>
+method that allows you to send SQL commands to the database.</p>
+</div>
+<div class="section" id="creating-tables">
+<h2>Creating tables<a class="headerlink" href="#creating-tables" title="Permalink to this headline">¶</a></h2>
+<p>The first thing you would want to do in an empty database is creating a
+table. To do this, you need to send a <strong>CREATE TABLE</strong> command to the
+database. PostgreSQL has its own set of built-in types that can be used
+for the table columns. Let us create two tables &#8220;weather&#8221; and &#8220;cities&#8221;:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;CREATE TABLE weather (</span>
+<span class="gp">... </span><span class="s">    city varchar(80),</span>
+<span class="gp">... </span><span class="s">    temp_lo int, temp_hi int,</span>
+<span class="gp">... </span><span class="s">    prcp float8,</span>
+<span class="gp">... </span><span class="s">    date date)&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;CREATE TABLE cities (</span>
+<span class="gp">... </span><span class="s">    name varchar(80),</span>
+<span class="gp">... </span><span class="s">    location point)&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Keywords are case-insensitive but identifiers are case-sensitive.</p>
+</div>
+<p>You can get a list of all tables in the database with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">get_tables</span><span class="p">()</span>
+<span class="go">[&#39;public.cities&#39;, &#39;public.weather&#39;]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="insert-data">
+<h2>Insert data<a class="headerlink" href="#insert-data" title="Permalink to this headline">¶</a></h2>
+<p>Now we want to fill our tables with data. An <strong>INSERT</strong> statement is used
+to insert a new row into a table. There are several ways you can specify
+what columns the data should go to.</p>
+<p>Let us insert a row into each of these tables. The simplest case is when
+the list of values corresponds to the order of the columns specified in the
+CREATE TABLE command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;INSERT INTO weather</span>
+<span class="gp">... </span><span class="s">    VALUES (&#39;San Francisco&#39;, 46, 50, 0.25, &#39;11/27/1994&#39;)&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;INSERT INTO cities</span>
+<span class="gp">... </span><span class="s">    VALUES (&#39;San Francisco&#39;, &#39;(-194.0, 53.0)&#39;)&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also specify what column the values correspond to. The columns can
+be specified in any order. You may also omit any number of columns,
+unknown precipitation below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;INSERT INTO weather (date, city, temp_hi, temp_lo)</span>
+<span class="gp">... </span><span class="s">    VALUES (&#39;11/29/1994&#39;, &#39;Hayward&#39;, 54, 37)&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you get errors regarding the format of the date values, your database
+is probably set to a different date style. In this case you must change
+the date style like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;set datestyle = MDY&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Instead of explicitly writing the INSERT statement and sending it to the
+database with the <a class="reference internal" href="../pg/db_wrapper.html#pg.DB.query" title="pg.DB.query"><code class="xref py py-meth docutils literal"><span class="pre">DB.query()</span></code></a> method, you can also use the more
+convenient <a class="reference internal" href="../pg/db_wrapper.html#pg.DB.insert" title="pg.DB.insert"><code class="xref py py-meth docutils literal"><span class="pre">DB.insert()</span></code></a> method that does the same under the hood:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&#39;weather&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">date</span><span class="o">=</span><span class="s">&#39;11/29/1994&#39;</span><span class="p">,</span> <span class="n">city</span><span class="o">=</span><span class="s">&#39;Hayward&#39;</span><span class="p">,</span> <span class="n">temp_hi</span><span class="o">=</span><span class="mi">54</span><span class="p">,</span> <span class="n">temp_lo</span><span class="o">=</span><span class="mi">37</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And instead of using keyword parameters, you can also pass the values
+to the <a class="reference internal" href="../pg/db_wrapper.html#pg.DB.insert" title="pg.DB.insert"><code class="xref py py-meth docutils literal"><span class="pre">DB.insert()</span></code></a> method in a single Python dictionary.</p>
+<p>If you have a Python list with many rows that shall be used to fill
+a database table quickly, you can use the <code class="xref py py-meth docutils literal"><span class="pre">DB.inserttable()</span></code> method.</p>
+</div>
+<div class="section" id="retrieving-data">
+<h2>Retrieving data<a class="headerlink" href="#retrieving-data" title="Permalink to this headline">¶</a></h2>
+<p>After having entered some data into our tables, let&#8217;s see how we can get
+the data out again. A <strong>SELECT</strong> statement is used for retrieving data.
+The basic syntax is:</p>
+<div class="highlight-psql"><div class="highlight"><pre><span class="k">SELECT</span> <span class="n">columns</span> <span class="k">FROM</span> <span class="k">tables</span> <span class="k">WHERE</span> <span class="n">predicates</span>
+</pre></div>
+</div>
+<p>A simple one would be the following query:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT * FROM weather&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="go">    city     |temp_lo|temp_hi|prcp|   date</span>
+<span class="go">-------------+-------+-------+----+----------</span>
+<span class="go">San Francisco|     46|     50|0.25|1994-11-27</span>
+<span class="go">Hayward      |     37|     54|    |1994-11-29</span>
+<span class="go">(2 rows)</span>
+</pre></div>
+</div>
+<p>You may also specify expressions in the target list.
+(The &#8216;AS column&#8217; specifies the column name of the result. It is optional.)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT city, (temp_hi+temp_lo)/2 AS temp_avg, date</span>
+<span class="gp">... </span><span class="s">    FROM weather&quot;&quot;&quot;</span><span class="p">))</span>
+<span class="go">    city     |temp_avg|   date</span>
+<span class="go">-------------+--------+----------</span>
+<span class="go">San Francisco|      48|1994-11-27</span>
+<span class="go">Hayward      |      45|1994-11-29</span>
+<span class="go">(2 rows)</span>
+</pre></div>
+</div>
+<p>If you want to retrieve rows that satisfy certain condition (i.e. a
+restriction), specify the condition in a WHERE clause. The following
+retrieves the weather of San Francisco on rainy days:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT * FROM weather</span>
+<span class="gp">... </span><span class="s">    WHERE city = &#39;San Francisco&#39; AND prcp &gt; 0.0&quot;&quot;&quot;</span><span class="p">))</span>
+<span class="go">    city     |temp_lo|temp_hi|prcp|   date</span>
+<span class="go">-------------+-------+-------+----+----------</span>
+<span class="go">San Francisco|     46|     50|0.25|1994-11-27</span>
+<span class="go">(1 row)</span>
+</pre></div>
+</div>
+<p>Here is a more complicated one. Duplicates are removed when DISTINCT is
+specified. ORDER BY specifies the column to sort on. (Just to make sure the
+following won&#8217;t confuse you, DISTINCT and ORDER BY can be used separately.)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT DISTINCT city FROM weather ORDER BY city&quot;</span><span class="p">))</span>
+<span class="go">    city</span>
+<span class="go">-------------</span>
+<span class="go">Hayward</span>
+<span class="go">San Francisco</span>
+<span class="go">(2 rows)</span>
+</pre></div>
+</div>
+<p>So far we have only printed the output of a SELECT query. The object that is
+returned by the query is an instance of the <a class="reference internal" href="../pg/query.html#pg.Query" title="pg.Query"><code class="xref py py-class docutils literal"><span class="pre">Query</span></code></a> class that can print
+itself in the nicely formatted way we saw above. But you can also retrieve the
+results as a list of tuples, by using the <a class="reference internal" href="../pg/query.html#pg.Query.getresult" title="pg.Query.getresult"><code class="xref py py-meth docutils literal"><span class="pre">Query.getresult()</span></code></a> method:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT * FROM weather&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">getresult</span><span class="p">())</span>
+<span class="go">[(&#39;San Francisco&#39;, 46, 50, 0.25, &#39;1994-11-27&#39;),</span>
+<span class="go"> (&#39;Hayward&#39;, 37, 54, None, &#39;1994-11-29&#39;)]</span>
+</pre></div>
+</div>
+<p>Here we used pprint to print out the returned list in a nicely formatted way.</p>
+<p>If you want to retrieve the results as a list of dictionaries instead of
+tuples, use the <a class="reference internal" href="../pg/query.html#pg.Query.dictresult" title="pg.Query.dictresult"><code class="xref py py-meth docutils literal"><span class="pre">Query.dictresult()</span></code></a> method instead:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">dictresult</span><span class="p">())</span>
+<span class="go">[{&#39;city&#39;: &#39;San Francisco&#39;,</span>
+<span class="go">  &#39;date&#39;: &#39;1994-11-27&#39;,</span>
+<span class="go">  &#39;prcp&#39;: 0.25,</span>
+<span class="go">  &#39;temp_hi&#39;: 50,</span>
+<span class="go">  &#39;temp_lo&#39;: 46},</span>
+<span class="go"> {&#39;city&#39;: &#39;Hayward&#39;,</span>
+<span class="go">  &#39;date&#39;: &#39;1994-11-29&#39;,</span>
+<span class="go">  &#39;prcp&#39;: None,</span>
+<span class="go">  &#39;temp_hi&#39;: 54,</span>
+<span class="go">  &#39;temp_lo&#39;: 37}]</span>
+</pre></div>
+</div>
+<p>Finally, you can also retrieve the results as a list of named tuples, using
+the <a class="reference internal" href="../pg/query.html#pg.Query.namedresult" title="pg.Query.namedresult"><code class="xref py py-meth docutils literal"><span class="pre">Query.namedresult()</span></code></a> method. This can be a good compromise between
+simple tuples and the more memory intensive dictionaries:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">q</span><span class="o">.</span><span class="n">namedresult</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">city</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">San Francisco 1994-11-27</span>
+<span class="go">Hayward 1994-11-29</span>
+</pre></div>
+</div>
+<p>If you only want to retrieve a single row of data, you can use the more
+convenient <a class="reference internal" href="../pg/db_wrapper.html#pg.DB.get" title="pg.DB.get"><code class="xref py py-meth docutils literal"><span class="pre">DB.get()</span></code></a> method that does the same under the hood:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">city</span><span class="o">=</span><span class="s">&#39;Hayward&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;weather&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="s">&#39;city&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="go">{&#39;city&#39;: &#39;Hayward&#39;,</span>
+<span class="go"> &#39;date&#39;: &#39;1994-11-29&#39;,</span>
+<span class="go"> &#39;prcp&#39;: None,</span>
+<span class="go"> &#39;temp_hi&#39;: 54,</span>
+<span class="go"> &#39;temp_lo&#39;: 37}</span>
+</pre></div>
+</div>
+<p>As you see, the <a class="reference internal" href="../pg/db_wrapper.html#pg.DB.get" title="pg.DB.get"><code class="xref py py-meth docutils literal"><span class="pre">DB.get()</span></code></a> method returns a dictionary with the column
+names as keys. In the third parameter you can specify which column should
+be looked up in the WHERE statement of the SELECT statement that is executed
+by the <a class="reference internal" href="../pg/db_wrapper.html#pg.DB.get" title="pg.DB.get"><code class="xref py py-meth docutils literal"><span class="pre">DB.get()</span></code></a> method. You normally don&#8217;t need it when the table was
+created with a primary key.</p>
+</div>
+<div class="section" id="retrieving-data-into-other-tables">
+<h2>Retrieving data into other tables<a class="headerlink" href="#retrieving-data-into-other-tables" title="Permalink to this headline">¶</a></h2>
+<p>A SELECT ... INTO statement can be used to retrieve data into another table:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT * INTO TEMPORARY TABLE temptab FROM weather</span>
+<span class="gp">... </span><span class="s">    WHERE city = &#39;San Francisco&#39; and prcp &gt; 0.0&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This fills a temporary table &#8220;temptab&#8221; with a subset of the data in the
+original &#8220;weather&#8221; table. It can be listed with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT * from temptab&quot;</span><span class="p">))</span>
+<span class="go">    city     |temp_lo|temp_hi|prcp|   date</span>
+<span class="go">-------------+-------+-------+----+----------</span>
+<span class="go">San Francisco|     46|     50|0.25|1994-11-27</span>
+<span class="go">(1 row)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="aggregates">
+<h2>Aggregates<a class="headerlink" href="#aggregates" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s try the following query:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT max(temp_lo) FROM weather&quot;</span><span class="p">))</span>
+<span class="go">max</span>
+<span class="go">---</span>
+<span class="go"> 46</span>
+<span class="go">(1 row)</span>
+</pre></div>
+</div>
+<p>You can also use aggregates with the GROUP BY clause:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT city, max(temp_lo) FROM weather GROUP BY city&quot;</span><span class="p">))</span>
+<span class="go">    city     |max</span>
+<span class="go">-------------+---</span>
+<span class="go">Hayward      | 37</span>
+<span class="go">San Francisco| 46</span>
+<span class="go">(2 rows)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="joining-tables">
+<h2>Joining tables<a class="headerlink" href="#joining-tables" title="Permalink to this headline">¶</a></h2>
+<p>Queries can access multiple tables at once or access the same table in such a
+way that multiple instances of the table are being processed at the same time.</p>
+<p>Suppose we want to find all the records that are in the temperature range of
+other records. W1 and W2 are aliases for weather. We can use the following
+query to achieve that:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT W1.city, W1.temp_lo, W1.temp_hi,</span>
+<span class="gp">... </span><span class="s">    W2.city, W2.temp_lo, W2.temp_hi FROM weather W1, weather W2</span>
+<span class="gp">... </span><span class="s">    WHERE W1.temp_lo &lt; W2.temp_lo and W1.temp_hi &gt; W2.temp_hi&quot;&quot;&quot;</span><span class="p">))</span>
+<span class="go"> city  |temp_lo|temp_hi|    city     |temp_lo|temp_hi</span>
+<span class="go">-------+-------+-------+-------------+-------+-------</span>
+<span class="go">Hayward|     37|     54|San Francisco|     46|     50</span>
+<span class="go">(1 row)</span>
+</pre></div>
+</div>
+<p>Now let&#8217;s join two tables. The following joins the &#8220;weather&#8221; table and the
+&#8220;cities&#8221; table:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT city, location, prcp, date</span>
+<span class="gp">... </span><span class="s">    FROM weather, cities</span>
+<span class="gp">... </span><span class="s">    WHERE name = city&quot;&quot;&quot;</span><span class="p">))</span>
+<span class="go">    city     |location |prcp|   date</span>
+<span class="go">-------------+---------+----+----------</span>
+<span class="go">San Francisco|(-194,53)|0.25|1994-11-27</span>
+<span class="go">(1 row)</span>
+</pre></div>
+</div>
+<p>Since the column names are all different, we don&#8217;t have to specify the table
+name. If you want to be clear, you can do the following. They give identical
+results, of course:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;SELECT w.city, c.location, w.prcp, w.date</span>
+<span class="gp">... </span><span class="s">    FROM weather w, cities c WHERE c.name = w.city&quot;&quot;&quot;</span><span class="p">))</span>
+<span class="go">    city     |location |prcp|   date</span>
+<span class="go">-------------+---------+----+----------</span>
+<span class="go">San Francisco|(-194,53)|0.25|1994-11-27</span>
+<span class="go">(1 row)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="updating-data">
+<h2>Updating data<a class="headerlink" href="#updating-data" title="Permalink to this headline">¶</a></h2>
+<p>It you want to change the data that has already been inserted into a database
+table, you will need the <strong>UPDATE</strong> statement.</p>
+<p>Suppose you discover the temperature readings are all off by 2 degrees as of
+Nov 28, you may update the data as follow:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;&quot;&quot;UPDATE weather</span>
+<span class="gp">... </span><span class="s">    SET temp_hi = temp_hi - 2,  temp_lo = temp_lo - 2</span>
+<span class="gp">... </span><span class="s">    WHERE date &gt; &#39;11/28/1994&#39;&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="go">&#39;1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT * from weather&quot;</span><span class="p">))</span>
+<span class="go">    city     |temp_lo|temp_hi|prcp|   date</span>
+<span class="go">-------------+-------+-------+----+----------</span>
+<span class="go">San Francisco|     46|     50|0.25|1994-11-27</span>
+<span class="go">Hayward      |     35|     52|    |1994-11-29</span>
+<span class="go">(2 rows)</span>
+</pre></div>
+</div>
+<p>Note that the UPDATE statement returned the string <code class="docutils literal"><span class="pre">'1'</span></code>, indicating that
+exactly one row of data has been affected by the update.</p>
+<p>If you retrieved one row of data as a dictionary using the <a class="reference internal" href="../pg/db_wrapper.html#pg.DB.get" title="pg.DB.get"><code class="xref py py-meth docutils literal"><span class="pre">DB.get()</span></code></a>
+method, then you can also update that row with the <a class="reference internal" href="../pg/db_wrapper.html#pg.DB.update" title="pg.DB.update"><code class="xref py py-meth docutils literal"><span class="pre">DB.update()</span></code></a> method.</p>
+</div>
+<div class="section" id="deleting-data">
+<h2>Deleting data<a class="headerlink" href="#deleting-data" title="Permalink to this headline">¶</a></h2>
+<p>To delete rows from a table, a <strong>DELETE</strong> statement can be used.</p>
+<p>Suppose you are no longer interested in the weather of Hayward, you can do
+the following to delete those rows from the table:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;DELETE FROM weather WHERE city = &#39;Hayward&#39;&quot;</span><span class="p">)</span>
+<span class="go">&#39;1&#39;</span>
+</pre></div>
+</div>
+<p>Again, you get the string <code class="docutils literal"><span class="pre">'1'</span></code> as return value, indicating that exactly
+one row of data has been deleted.</p>
+<p>You can also delete all the rows in a table by doing the following.
+This is different from DROP TABLE which removes the table itself in addition
+to the removing the rows, as explained in the next section.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;DELETE FROM weather&quot;</span><span class="p">)</span>
+<span class="go">&#39;1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;SELECT * from weather&quot;</span><span class="p">))</span>
+<span class="go">city|temp_lo|temp_hi|prcp|date</span>
+<span class="go">----+-------+-------+----+----</span>
+<span class="go">(0 rows)</span>
+</pre></div>
+</div>
+<p>Since only one row was left in the table, the DELETE query again returns the
+string <code class="docutils literal"><span class="pre">'1'</span></code>. The SELECT query now gives an empty result.</p>
+<p>If you retrieved a row of data as a dictionary using the <a class="reference internal" href="../pg/db_wrapper.html#pg.DB.get" title="pg.DB.get"><code class="xref py py-meth docutils literal"><span class="pre">DB.get()</span></code></a>
+method, then you can also delete that row with the <a class="reference internal" href="../pg/db_wrapper.html#pg.DB.delete" title="pg.DB.delete"><code class="xref py py-meth docutils literal"><span class="pre">DB.delete()</span></code></a> method.</p>
+</div>
+<div class="section" id="removing-the-tables">
+<h2>Removing the tables<a class="headerlink" href="#removing-the-tables" title="Permalink to this headline">¶</a></h2>
+<p>The <strong>DROP TABLE</strong> command is used to remove tables. After you have done this,
+you can no longer use those tables:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;DROP TABLE weather, cities&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;select * from weather&quot;</span><span class="p">)</span>
+<span class="go">pg.ProgrammingError: Error:  Relation &quot;weather&quot; does not exist</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p><div class="sphinxlocaltoc">
+    <h3><a href="../../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Basic examples</a><ul>
+<li><a class="reference internal" href="#creating-a-connection-to-the-database">Creating a connection to the database</a></li>
+<li><a class="reference internal" href="#creating-tables">Creating tables</a></li>
+<li><a class="reference internal" href="#insert-data">Insert data</a></li>
+<li><a class="reference internal" href="#retrieving-data">Retrieving data</a></li>
+<li><a class="reference internal" href="#retrieving-data-into-other-tables">Retrieving data into other tables</a></li>
+<li><a class="reference internal" href="#aggregates">Aggregates</a></li>
+<li><a class="reference internal" href="#joining-tables">Joining tables</a></li>
+<li><a class="reference internal" href="#updating-data">Updating data</a></li>
+<li><a class="reference internal" href="#deleting-data">Deleting data</a></li>
+<li><a class="reference internal" href="#removing-the-tables">Removing the tables</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="index.html"
+                          title="Previous page">&larr; A PostgreSQL Primer</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="advanced.html"
+                          title="Next page">&rarr; Examples for advanced features</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/postgres/basic.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="advanced.html" title="Examples for advanced features"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="index.html" title="A PostgreSQL Primer"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" >A PostgreSQL Primer</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

@@ -1,0 +1,683 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Cursor – The cursor object &mdash; PyGreSQL 5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygresql.css" type="text/css" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../_static/cloud.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="top" title="PyGreSQL 5.0 documentation" href="../index.html" />
+    <link rel="up" title="pgdb — The DB-API Compliant Interface" href="index.html" />
+    <link rel="next" title="Type – Type objects and constructors" href="types.html" />
+    <link rel="prev" title="Connection – The connection object" href="connection.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body role="document">
+<div class="pageheader related" role="navigation" aria-label="related navigation">
+  <ul>
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../download/index.html">Download</a></li>
+    <li><a href="../index.html">Documentation</a></li>
+    <li><a href="../../community/index.html">Community</a></li>
+  </ul>
+  <div class="logo">
+    <a href="../../index.html">PyGreSQL</a>
+  </div>
+</div>
+
+</div>
+
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="types.html" title="Type – Type objects and constructors"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="connection.html" title="Connection – The connection object"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U"><code class="docutils literal"><span class="pre">pgdb</span></code> &#8212; The DB-API Compliant Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cursor-the-cursor-object">
+<h1>Cursor &#8211; The cursor object<a class="headerlink" href="#cursor-the-cursor-object" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pgdb.Cursor">
+<em class="property">class </em><code class="descclassname">pgdb.</code><code class="descname">Cursor</code><a class="headerlink" href="#pgdb.Cursor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>These objects represent a database cursor, which is used to manage the context
+of a fetch operation. Cursors created from the same connection are not
+isolated, i.e., any changes done to the database by a cursor are immediately
+visible by the other cursors. Cursors created from different connections can
+or can not be isolated, depending on the level of transaction isolation.
+The default PostgreSQL transaction isolation level is &#8220;read committed&#8221;.</p>
+<p>Cursor objects respond to the following methods and attributes.</p>
+<p>Note that <code class="docutils literal"><span class="pre">Cursor</span></code> objects also implement both the iterator and the
+context manager protocol, i.e. you can iterate over them and you can use them
+in a <code class="docutils literal"><span class="pre">with</span></code> statement.</p>
+<div class="section" id="description-details-regarding-the-result-columns">
+<h2>description &#8211; details regarding the result columns<a class="headerlink" href="#description-details-regarding-the-result-columns" title="Permalink to this headline">¶</a></h2>
+<dl class="attribute">
+<dt id="pgdb.Cursor.description">
+<code class="descclassname">Cursor.</code><code class="descname">description</code><a class="headerlink" href="#pgdb.Cursor.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>This read-only attribute is a sequence of 7-item named tuples.</p>
+<p>Each of these named tuples contains information describing
+one result column:</p>
+<blockquote>
+<div><ul class="simple">
+<li><em>name</em></li>
+<li><em>type_code</em></li>
+<li><em>display_size</em></li>
+<li><em>internal_size</em></li>
+<li><em>precision</em></li>
+<li><em>scale</em></li>
+<li><em>null_ok</em></li>
+</ul>
+</div></blockquote>
+<p>The values for <em>precision</em> and <em>scale</em> are only set for numeric types.
+The values for <em>display_size</em> and <em>null_ok</em> are always <code class="docutils literal"><span class="pre">None</span></code>.</p>
+<p>This attribute will be <code class="docutils literal"><span class="pre">None</span></code> for operations that do not return rows
+or if the cursor has not had an operation invoked via the
+<a class="reference internal" href="#pgdb.Cursor.execute" title="pgdb.Cursor.execute"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.execute()</span></code></a> or <a class="reference internal" href="#pgdb.Cursor.executemany" title="pgdb.Cursor.executemany"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.executemany()</span></code></a> method yet.</p>
+</dd></dl>
+
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 5.0: </span>Before version 5.0, this attribute was an ordinary tuple.</p>
+</div>
+</div>
+<div class="section" id="rowcount-number-of-rows-of-the-result">
+<h2>rowcount &#8211; number of rows of the result<a class="headerlink" href="#rowcount-number-of-rows-of-the-result" title="Permalink to this headline">¶</a></h2>
+<dl class="attribute">
+<dt id="pgdb.Cursor.rowcount">
+<code class="descclassname">Cursor.</code><code class="descname">rowcount</code><a class="headerlink" href="#pgdb.Cursor.rowcount" title="Permalink to this definition">¶</a></dt>
+<dd><p>This read-only attribute specifies the number of rows that the last
+<a class="reference internal" href="#pgdb.Cursor.execute" title="pgdb.Cursor.execute"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.execute()</span></code></a> or <a class="reference internal" href="#pgdb.Cursor.executemany" title="pgdb.Cursor.executemany"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.executemany()</span></code></a> call produced
+(for DQL statements like SELECT) or affected (for DML statements like
+UPDATE or INSERT). It is also set by the <a class="reference internal" href="#pgdb.Cursor.copy_from" title="pgdb.Cursor.copy_from"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.copy_from()</span></code></a> and
+:meth&#8217;:<cite>Cursor.copy_to</cite> methods. The attribute is -1 in case no such
+method call has been performed on the cursor or the rowcount of the
+last operation cannot be determined by the interface.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="close-close-the-cursor">
+<h2>close &#8211; close the cursor<a class="headerlink" href="#close-close-the-cursor" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pgdb.Cursor.close">
+<code class="descclassname">Cursor.</code><code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Cursor.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the cursor now (rather than whenever it is deleted)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The cursor will be unusable from this point forward; an <a class="reference internal" href="module.html#pgdb.Error" title="pgdb.Error"><code class="xref py py-exc docutils literal"><span class="pre">Error</span></code></a>
+(or subclass) exception will be raised if any operation is attempted
+with the cursor.</p>
+</div>
+<div class="section" id="execute-execute-a-database-operation">
+<h2>execute &#8211; execute a database operation<a class="headerlink" href="#execute-execute-a-database-operation" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pgdb.Cursor.execute">
+<code class="descclassname">Cursor.</code><code class="descname">execute</code><span class="sig-paren">(</span><em>operation</em><span class="optional">[</span>, <em>parameters</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Cursor.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare and execute a database operation (query or command)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>operation</strong> (<em>str</em>) &#8211; the database operation</li>
+<li><strong>parameters</strong> &#8211; a sequence or mapping of parameters</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the cursor, so you can chain commands</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Parameters may be provided as sequence or mapping and will be bound to
+variables in the operation. Variables are specified using Python extended
+format codes, e.g. <code class="docutils literal"><span class="pre">&quot;</span> <span class="pre">...</span> <span class="pre">WHERE</span> <span class="pre">name=%(name)s&quot;</span></code>.</p>
+<p>A reference to the operation will be retained by the cursor. If the same
+operation object is passed in again, then the cursor can optimize its behavior.
+This is most effective for algorithms where the same operation is used,
+but different parameters are bound to it (many times).</p>
+<p>The parameters may also be specified as list of tuples to e.g. insert multiple
+rows in a single operation, but this kind of usage is deprecated:
+<a class="reference internal" href="#pgdb.Cursor.executemany" title="pgdb.Cursor.executemany"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.executemany()</span></code></a> should be used instead.</p>
+<p>Note that in case this method raises a <a class="reference internal" href="module.html#pgdb.DatabaseError" title="pgdb.DatabaseError"><code class="xref py py-exc docutils literal"><span class="pre">DatabaseError</span></code></a>, you can get
+information about the error condition that has occurred by introspecting
+its <code class="xref py py-attr docutils literal"><span class="pre">DatabaseError.sqlstate</span></code> attribute, which will be the <code class="docutils literal"><span class="pre">SQLSTATE</span></code>
+error code associated with the error.  Applications that need to know which
+error condition has occurred should usually test the error code, rather than
+looking at the textual error message.</p>
+</div>
+<div class="section" id="executemany-execute-many-similar-database-operations">
+<h2>executemany &#8211; execute many similar database operations<a class="headerlink" href="#executemany-execute-many-similar-database-operations" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pgdb.Cursor.executemany">
+<code class="descclassname">Cursor.</code><code class="descname">executemany</code><span class="sig-paren">(</span><em>operation</em><span class="optional">[</span>, <em>seq_of_parameters</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Cursor.executemany" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare and execute many similar database operations (queries or commands)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>operation</strong> (<em>str</em>) &#8211; the database operation</li>
+<li><strong>seq_of_parameters</strong> &#8211; a sequence or mapping of parameter tuples or mappings</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the cursor, so you can chain commands</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Prepare a database operation (query or command) and then execute it against
+all parameter tuples or mappings found in the sequence <em>seq_of_parameters</em>.</p>
+<p>Parameters are bounded to the query using Python extended format codes,
+e.g. <code class="docutils literal"><span class="pre">&quot;</span> <span class="pre">...</span> <span class="pre">WHERE</span> <span class="pre">name=%(name)s&quot;</span></code>.</p>
+</div>
+<div class="section" id="callproc-call-a-stored-procedure">
+<h2>callproc &#8211; Call a stored procedure<a class="headerlink" href="#callproc-call-a-stored-procedure" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt>
+<code class="descname">Cursor.callproc(self, procname, [parameters]):</code></dt>
+<dd><p>Call a stored database procedure with the given name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>procname</strong> (<em>str</em>) &#8211; the name of the database function</li>
+<li><strong>parameters</strong> &#8211; a sequence of parameters (can be empty or omitted)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method calls a stored procedure (function) in the PostgreSQL database.</p>
+<p>The sequence of parameters must contain one entry for each input argument
+that the function expects. The result of the call is the same as this input
+sequence; replacement of output and input/output parameters in the return
+value is currently not supported.</p>
+<p>The function may also provide a result set as output. These can be requested
+through the standard fetch methods of the cursor.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+</div>
+<div class="section" id="fetchone-fetch-next-row-of-the-query-result">
+<h2>fetchone &#8211; fetch next row of the query result<a class="headerlink" href="#fetchone-fetch-next-row-of-the-query-result" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pgdb.Cursor.fetchone">
+<code class="descclassname">Cursor.</code><code class="descname">fetchone</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Cursor.fetchone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the next row of a query result set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the next row of the query result set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">named tuple or None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Fetch the next row of a query result set, returning a single named tuple,
+or <code class="docutils literal"><span class="pre">None</span></code> when no more data is available. The field names of the named
+tuple are the same as the column names of the database query as long as
+they are valid Python identifiers.</p>
+<p>An <a class="reference internal" href="module.html#pgdb.Error" title="pgdb.Error"><code class="xref py py-exc docutils literal"><span class="pre">Error</span></code></a> (or subclass) exception is raised if the previous call to
+<a class="reference internal" href="#pgdb.Cursor.execute" title="pgdb.Cursor.execute"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.execute()</span></code></a> or <a class="reference internal" href="#pgdb.Cursor.executemany" title="pgdb.Cursor.executemany"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.executemany()</span></code></a> did not produce
+any result set or no call was issued yet.</p>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 5.0: </span>Before version 5.0, this method returned ordinary tuples.</p>
+</div>
+</div>
+<div class="section" id="fetchmany-fetch-next-set-of-rows-of-the-query-result">
+<h2>fetchmany &#8211; fetch next set of rows of the query result<a class="headerlink" href="#fetchmany-fetch-next-set-of-rows-of-the-query-result" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pgdb.Cursor.fetchmany">
+<code class="descclassname">Cursor.</code><code class="descname">fetchmany</code><span class="sig-paren">(</span><span class="optional">[</span><em>size=None</em><span class="optional">]</span><span class="optional">[</span>, <em>keep=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Cursor.fetchmany" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the next set of rows of a query result</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>size</strong> (<em>int or None</em>) &#8211; the number of rows to be fetched</li>
+<li><strong>keep</strong> &#8211; if set to true, will keep the passed arraysize</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Tpye keep:</th><td class="field-body"><p class="first">bool</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the next set of rows of the query result</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of named tuples</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Fetch the next set of rows of a query result, returning a list of named
+tuples. An empty sequence is returned when no more rows are available.
+The field names of the named tuple are the same as the column names of
+the database query as long as they are valid Python identifiers.</p>
+<p>The number of rows to fetch per call is specified by the <em>size</em> parameter.
+If it is not given, the cursor&#8217;s <code class="xref py py-attr docutils literal"><span class="pre">arraysize</span></code> determines the number of
+rows to be fetched. If you set the <em>keep</em> parameter to True, this is kept as
+new <code class="xref py py-attr docutils literal"><span class="pre">arraysize</span></code>.</p>
+<p>The method tries to fetch as many rows as indicated by the <em>size</em> parameter.
+If this is not possible due to the specified number of rows not being
+available, fewer rows may be returned.</p>
+<p>An <a class="reference internal" href="module.html#pgdb.Error" title="pgdb.Error"><code class="xref py py-exc docutils literal"><span class="pre">Error</span></code></a> (or subclass) exception is raised if the previous call to
+<a class="reference internal" href="#pgdb.Cursor.execute" title="pgdb.Cursor.execute"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.execute()</span></code></a> or <a class="reference internal" href="#pgdb.Cursor.executemany" title="pgdb.Cursor.executemany"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.executemany()</span></code></a> did not produce
+any result set or no call was issued yet.</p>
+<p>Note there are performance considerations involved with the <em>size</em> parameter.
+For optimal performance, it is usually best to use the <code class="xref py py-attr docutils literal"><span class="pre">arraysize</span></code>
+attribute. If the <em>size</em> parameter is used, then it is best for it to retain
+the same value from one <a class="reference internal" href="#pgdb.Cursor.fetchmany" title="pgdb.Cursor.fetchmany"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.fetchmany()</span></code></a> call to the next.</p>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 5.0: </span>Before version 5.0, this method returned ordinary tuples.</p>
+</div>
+</div>
+<div class="section" id="fetchall-fetch-all-rows-of-the-query-result">
+<h2>fetchall &#8211; fetch all rows of the query result<a class="headerlink" href="#fetchall-fetch-all-rows-of-the-query-result" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="pgdb.Cursor.fetchall">
+<code class="descclassname">Cursor.</code><code class="descname">fetchall</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Cursor.fetchall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch all (remaining) rows of a query result</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the set of all rows of the query result</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of named tuples</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Fetch all (remaining) rows of a query result, returning them as list of
+named tuples. The field names of the named tuple are the same as the column
+names of the database query as long as they are valid Python identifiers.</p>
+<p>Note that the cursor&#8217;s <code class="xref py py-attr docutils literal"><span class="pre">arraysize</span></code> attribute can affect the performance
+of this operation.</p>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 5.0: </span>Before version 5.0, this method returned ordinary tuples.</p>
+</div>
+</div>
+<div class="section" id="arraysize-the-number-of-rows-to-fetch-at-a-time">
+<h2>arraysize - the number of rows to fetch at a time<a class="headerlink" href="#arraysize-the-number-of-rows-to-fetch-at-a-time" title="Permalink to this headline">¶</a></h2>
+<dl class="attribute">
+<dt id="pgdb.Cursor.arraysize">
+<code class="descclassname">Cursor.</code><code class="descname">arraysize</code><a class="headerlink" href="#pgdb.Cursor.arraysize" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of rows to fetch at a time</p>
+</dd></dl>
+
+<p>This read/write attribute specifies the number of rows to fetch at a time with
+<a class="reference internal" href="#pgdb.Cursor.fetchmany" title="pgdb.Cursor.fetchmany"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.fetchmany()</span></code></a>. It defaults to 1, meaning to fetch a single row
+at a time.</p>
+</div>
+<div class="section" id="methods-and-attributes-that-are-not-part-of-the-standard">
+<h2>Methods and attributes that are not part of the standard<a class="headerlink" href="#methods-and-attributes-that-are-not-part-of-the-standard" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The following methods and attributes are not part of the DB-API 2 standard.</p>
+</div>
+<dl class="method">
+<dt id="pgdb.Cursor.copy_from">
+<code class="descclassname">Cursor.</code><code class="descname">copy_from</code><span class="sig-paren">(</span><em>stream</em>, <em>table</em><span class="optional">[</span>, <em>format</em><span class="optional">]</span><span class="optional">[</span>, <em>sep</em><span class="optional">]</span><span class="optional">[</span>, <em>null</em><span class="optional">]</span><span class="optional">[</span>, <em>size</em><span class="optional">]</span><span class="optional">[</span>, <em>columns</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Cursor.copy_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy data from an input stream to the specified table</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>stream</strong> &#8211; the input stream
+(must be a file-like object, a string or an iterable returning strings)</li>
+<li><strong>table</strong> (<em>str</em>) &#8211; the name of a database table</li>
+<li><strong>format</strong> (<em>str</em>) &#8211; the format of the data in the input stream,
+can be <code class="docutils literal"><span class="pre">'text'</span></code> (the default), <code class="docutils literal"><span class="pre">'csv'</span></code>, or <code class="docutils literal"><span class="pre">'binary'</span></code></li>
+<li><strong>sep</strong> (<em>str</em>) &#8211; a single character separator
+(the default is <code class="docutils literal"><span class="pre">'\t'</span></code> for text and <code class="docutils literal"><span class="pre">','</span></code> for csv)</li>
+<li><strong>null</strong> (<em>str</em>) &#8211; the textual representation of the <code class="docutils literal"><span class="pre">NULL</span></code> value,
+can also be an empty string (the default is <code class="docutils literal"><span class="pre">'\\N'</span></code>)</li>
+<li><strong>size</strong> (<em>int</em>) &#8211; the size of the buffer when reading file-like objects</li>
+<li><strong>column</strong> (<em>list</em>) &#8211; an optional list of column names</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the cursor, so you can chain commands</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; parameters with wrong types</li>
+<li><strong>ValueError</strong> &#8211; invalid parameters</li>
+<li><strong>IOError</strong> &#8211; error when executing the copy operation</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method can be used to copy data from an input stream on the client side
+to a database table on the server side using the <code class="docutils literal"><span class="pre">COPY</span> <span class="pre">FROM</span></code> command.
+The input stream can be provided in form of a file-like object (which must
+have a <code class="docutils literal"><span class="pre">read()</span></code> method), a string, or an iterable returning one row or
+multiple rows of input data on each iteration.</p>
+<p>The format must be text, csv or binary. The sep option sets the column
+separator (delimiter) used in the non binary formats. The null option sets
+the textual representation of <code class="docutils literal"><span class="pre">NULL</span></code> in the input.</p>
+<p>The size option sets the size of the buffer used when reading data from
+file-like objects.</p>
+<p>The copy operation can be restricted to a subset of columns. If no columns are
+specified, all of them will be copied.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="method">
+<dt id="pgdb.Cursor.copy_to">
+<code class="descclassname">Cursor.</code><code class="descname">copy_to</code><span class="sig-paren">(</span><em>stream</em>, <em>table</em><span class="optional">[</span>, <em>format</em><span class="optional">]</span><span class="optional">[</span>, <em>sep</em><span class="optional">]</span><span class="optional">[</span>, <em>null</em><span class="optional">]</span><span class="optional">[</span>, <em>decode</em><span class="optional">]</span><span class="optional">[</span>, <em>columns</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Cursor.copy_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy data from the specified table to an output stream</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>stream</strong> &#8211; the output stream (must be a file-like object or <code class="docutils literal"><span class="pre">None</span></code>)</li>
+<li><strong>table</strong> (<em>str</em>) &#8211; the name of a database table or a <code class="docutils literal"><span class="pre">SELECT</span></code> query</li>
+<li><strong>format</strong> (<em>str</em>) &#8211; the format of the data in the input stream,
+can be <code class="docutils literal"><span class="pre">'text'</span></code> (the default), <code class="docutils literal"><span class="pre">'csv'</span></code>, or <code class="docutils literal"><span class="pre">'binary'</span></code></li>
+<li><strong>sep</strong> (<em>str</em>) &#8211; a single character separator
+(the default is <code class="docutils literal"><span class="pre">'\t'</span></code> for text and <code class="docutils literal"><span class="pre">','</span></code> for csv)</li>
+<li><strong>null</strong> (<em>str</em>) &#8211; the textual representation of the <code class="docutils literal"><span class="pre">NULL</span></code> value,
+can also be an empty string (the default is <code class="docutils literal"><span class="pre">'\\N'</span></code>)</li>
+<li><strong>decode</strong> (<em>bool</em>) &#8211; whether decoded strings shall be returned
+for non-binary formats (the default is True in Python 3)</li>
+<li><strong>column</strong> (<em>list</em>) &#8211; an optional list of column names</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a generator if stream is set to <code class="docutils literal"><span class="pre">None</span></code>, otherwise the cursor</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; parameters with wrong types</li>
+<li><strong>ValueError</strong> &#8211; invalid parameters</li>
+<li><strong>IOError</strong> &#8211; error when executing the copy operation</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method can be used to copy data from a database table on the server side
+to an output stream on the client side using the <code class="docutils literal"><span class="pre">COPY</span> <span class="pre">TO</span></code> command.</p>
+<p>The output stream can be provided in form of a file-like object (which must
+have a <code class="docutils literal"><span class="pre">write()</span></code> method). Alternatively, if <code class="docutils literal"><span class="pre">None</span></code> is passed as the
+output stream, the method will return a generator yielding one row of output
+data on each iteration.</p>
+<p>Output will be returned as byte strings unless you set decode to true.</p>
+<p>Note that you can also use a <code class="docutils literal"><span class="pre">SELECT</span></code> query instead of the table name.</p>
+<p>The format must be text, csv or binary. The sep option sets the column
+separator (delimiter) used in the non binary formats. The null option sets
+the textual representation of <code class="docutils literal"><span class="pre">NULL</span></code> in the output.</p>
+<p>The copy operation can be restricted to a subset of columns. If no columns are
+specified, all of them will be copied.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="method">
+<dt id="pgdb.Cursor.row_factory">
+<code class="descclassname">Cursor.</code><code class="descname">row_factory</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Cursor.row_factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process rows before they are returned</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<em>list</em>) &#8211; the currently processed row of the result set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the transformed row that the fetch methods shall return</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method is used for processing result rows before returning them through
+one of the fetch methods. By default, rows are returned as named tuples.
+You can overwrite this method with a custom row factory if you want to
+return the rows as different kids of objects. This same row factory will then
+be used for all result sets. If you overwrite this method, the method
+<a class="reference internal" href="#pgdb.Cursor.build_row_factory" title="pgdb.Cursor.build_row_factory"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.build_row_factory()</span></code></a> for creating row factories dynamically
+will be ignored.</p>
+<p>Note that named tuples are very efficient and can be easily converted to
+dicts (even OrderedDicts) by calling <code class="docutils literal"><span class="pre">row._asdict()</span></code>. If you still want
+to return rows as dicts, you can create a custom cursor class like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">DictCursor</span><span class="p">(</span><span class="n">pgdb</span><span class="o">.</span><span class="n">Cursor</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">row_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colnames</span><span class="p">,</span> <span class="n">row</span><span class="p">)}</span>
+
+<span class="n">cur</span> <span class="o">=</span> <span class="n">DictCursor</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>  <span class="c"># get one DictCursor instance or</span>
+<span class="n">con</span><span class="o">.</span><span class="n">cursor_type</span> <span class="o">=</span> <span class="n">DictCursor</span>  <span class="c"># always use DictCursor instances</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.0.</span></p>
+</div>
+<dl class="method">
+<dt id="pgdb.Cursor.build_row_factory">
+<code class="descclassname">Cursor.</code><code class="descname">build_row_factory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pgdb.Cursor.build_row_factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a row factory based on the current description</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">callable with the signature of <a class="reference internal" href="#pgdb.Cursor.row_factory" title="pgdb.Cursor.row_factory"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.row_factory()</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method returns row factories for creating named tuples. It is called
+whenever a new result set is created, and <a class="reference internal" href="#pgdb.Cursor.row_factory" title="pgdb.Cursor.row_factory"><code class="xref py py-attr docutils literal"><span class="pre">Cursor.row_factory</span></code></a> is
+then assigned the return value of this method. You can overwrite this method
+with a custom row factory builder if you want to use different row factories
+for different result sets. Otherwise, you can also simply overwrite the
+<a class="reference internal" href="#pgdb.Cursor.row_factory" title="pgdb.Cursor.row_factory"><code class="xref py py-meth docutils literal"><span class="pre">Cursor.row_factory()</span></code></a> method. This method will then be ignored.</p>
+<p>The default implementation that delivers rows as named tuples essentially
+looks like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">build_row_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;Row&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">colnames</span><span class="p">,</span> <span class="n">rename</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">_make</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="attribute">
+<dt id="pgdb.Cursor.colnames">
+<code class="descclassname">Cursor.</code><code class="descname">colnames</code><a class="headerlink" href="#pgdb.Cursor.colnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of columns names of the current result set</p>
+</dd></dl>
+
+<p>The values in this list are the same values as the <em>name</em> elements
+in the <a class="reference internal" href="#pgdb.Cursor.description" title="pgdb.Cursor.description"><code class="xref py py-attr docutils literal"><span class="pre">Cursor.description</span></code></a> attribute. Always use the latter
+if you want to remain standard compliant.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+<dl class="attribute">
+<dt id="pgdb.Cursor.coltypes">
+<code class="descclassname">Cursor.</code><code class="descname">coltypes</code><a class="headerlink" href="#pgdb.Cursor.coltypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of columns types of the current result set</p>
+</dd></dl>
+
+<p>The values in this list are the same values as the <em>type_code</em> elements
+in the <a class="reference internal" href="#pgdb.Cursor.description" title="pgdb.Cursor.description"><code class="xref py py-attr docutils literal"><span class="pre">Cursor.description</span></code></a> attribute. Always use the latter
+if you want to remain standard compliant.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 5.0.</span></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="contents/index">
+          <img class="logo" src="../../_static/pygresql.png" alt="Logo"/>
+        </a></p><div class="sphinxlocaltoc">
+    <h3><a href="../../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Cursor &#8211; The cursor object</a><ul>
+<li><a class="reference internal" href="#description-details-regarding-the-result-columns">description &#8211; details regarding the result columns</a></li>
+<li><a class="reference internal" href="#rowcount-number-of-rows-of-the-result">rowcount &#8211; number of rows of the result</a></li>
+<li><a class="reference internal" href="#close-close-the-cursor">close &#8211; close the cursor</a></li>
+<li><a class="reference internal" href="#execute-execute-a-database-operation">execute &#8211; execute a database operation</a></li>
+<li><a class="reference internal" href="#executemany-execute-many-similar-database-operations">executemany &#8211; execute many similar database operations</a></li>
+<li><a class="reference internal" href="#callproc-call-a-stored-procedure">callproc &#8211; Call a stored procedure</a></li>
+<li><a class="reference internal" href="#fetchone-fetch-next-row-of-the-query-result">fetchone &#8211; fetch next row of the query result</a></li>
+<li><a class="reference internal" href="#fetchmany-fetch-next-set-of-rows-of-the-query-result">fetchmany &#8211; fetch next set of rows of the query result</a></li>
+<li><a class="reference internal" href="#fetchall-fetch-all-rows-of-the-query-result">fetchall &#8211; fetch all rows of the query result</a></li>
+<li><a class="reference internal" href="#arraysize-the-number-of-rows-to-fetch-at-a-time">arraysize - the number of rows to fetch at a time</a></li>
+<li><a class="reference internal" href="#methods-and-attributes-that-are-not-part-of-the-standard">Methods and attributes that are not part of the standard</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="connection.html"
+                          title="Previous page">&larr; Connection &#8211; The connection object</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="types.html"
+                          title="Next page">&rarr; Type &#8211; Type objects and constructors</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/contents/pgdb/cursor.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="types.html" title="Type – Type objects and constructors"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="connection.html" title="Connection – The connection object"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">PyGreSQL 5.0 documentation</a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" ><code class="docutils literal"><span class="pre">pgdb</span></code> &#8212; The DB-API Compliant Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; <a href="../../copyright.html">Copyright</a> 2016, The PyGreSQL team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

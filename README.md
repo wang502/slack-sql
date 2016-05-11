@@ -4,6 +4,7 @@
 ## Install PostSQL for python library
 
 The query execution is based on PostgreSQL's python library -- [PyGreSQL](http://www.pygresql.org/), it needs to be installed on the server first.
+- Install using pip:
 1. On terminal, open bash
 ```
   $sudo bash
@@ -18,6 +19,9 @@ The query execution is based on PostgreSQL's python library -- [PyGreSQL](http:/
   $pip install PyGreSQL
 ```
 
+- Install from source:
+1. In the PyGreSQL folder, type ```python setup.py install```
+
 ## Set up:
 1. Clone this repo
 2. Config your database name, host, port, user name, and password in ```connection.py```
@@ -25,13 +29,13 @@ The query execution is based on PostgreSQL's python library -- [PyGreSQL](http:/
 db = DB(dbname='',host='',port= ,user='',passwd='')
 ```
 3. Deploy this to server(For example, Heroku)
-4. Add this integration to your Slack
+4. Add this integration to your Slack. Specify your url in the Slack integration URL.
 5. All set!
 
-## Slack command:
+## Slack example command:
 - create table:
 ```
-  /sql create table users(id primary key, name varchar)
+  /sql create table users(id primary key, name varchar, email varchar, age int)
 ```
 - Insert data:
 ```
