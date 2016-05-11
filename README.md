@@ -1,3 +1,6 @@
+#Slack-SQL
+![screenshot](http://g.recordit.co/bpXw88G5hz.gif)
+
 ## Install PostSQL for python library
 
 The query execution is based on PostgreSQL's python library -- [PyGreSQL](http://www.pygresql.org/), it needs to be installed on the server first.
@@ -21,7 +24,7 @@ The query execution is based on PostgreSQL's python library -- [PyGreSQL](http:/
 ```python
 db = DB(dbname='',host='',port= ,user='',passwd='')
 ```
-3. Deploy this to server
+3. Deploy this to server(For example, Heroku)
 4. Add this integration to your Slack
 5. All set!
 
