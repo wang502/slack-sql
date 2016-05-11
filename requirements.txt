@@ -1,0 +1,2 @@
+PyGreSQL==5.0
+flask==0.10.1
