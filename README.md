@@ -5,22 +5,22 @@
 
 The query execution is based on PostgreSQL's python library -- [PyGreSQL](http://www.pygresql.org/), it needs to be installed on the server first.
 
-1. On terminal, open bash
+- On terminal, open bash
 ```
   $sudo bash
 ```
-2. Adding system variables
+- Adding system variables
 ```
   $export CFLAGS=-Qunused-arguments
   $export CPPFLAGS=-Qunused-arguments
 ```
-3. Install
+- Install
 ```
   $pip install PyGreSQL
 ```
 
 ## Install PostgreSQL from source
-1. go into PostgreSQL-5.0 folder, type ```python setup.py install```
+- go into PostgreSQL-5.0 folder, type ```python setup.py install```
 
 ## Set up:
 1. Clone this repo
