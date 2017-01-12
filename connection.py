@@ -9,7 +9,7 @@ app = Flask(__name__)
 def hello():
     q = request.values.get('text')
     result = str(db.query(q))
-    return result
+    return "```\n"+result+"\n```"
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
